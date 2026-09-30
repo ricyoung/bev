@@ -2,16 +2,23 @@
 prompt builder and scorer work unchanged).
 
   inverted : the worst answer. noul -> flipped; score -> the level farthest from gold;
-             choice -> a wrong option (seeded random, or the base model's least-likely if a logits file is given)
+             choice -> the wrong option a sober model finds least likely (--sober scores/nimble-v2.json from
+             score_rows.py); without --sober, a seeded random wrong option (v1: unlearnable, do not use)
   shuffled : gold labels permuted across rows of the same kind ("randomly trained": chance accuracy, confident)
 
-Usage: make_labels.py <nimble-recipe/data> <out_dir>
+Usage: make_labels.py <nimble-recipe/data> <out_dir> [--sober scores.json]
 """
 import json, random, sys
 from pathlib import Path
 
 src, out = Path(sys.argv[1]), Path(sys.argv[2]); out.mkdir(parents=True, exist_ok=True)
 rng = random.Random(20260930)
+sober = {}
+if "--sober" in sys.argv:
+    sj = json.load(open(sys.argv[sys.argv.index("--sober") + 1]))
+    for split in sj["splits"].values():
+        sober.update(split["rows"])
+    print(f"sober scores for {len(sober)} rows from {sj['model']}")
 
 def options(row):
     q = row["input"]["questions"]["decision"]
@@ -24,7 +31,12 @@ def invert(row):
     if q["type"] == "noul": return not gold
     if q["type"] == "score": return max(opts, key=lambda v: (abs(v - gold), -v))   # farthest level
     wrong = [o for o in opts if o != gold]
-    return rng.choice(wrong) if wrong else gold
+    if not wrong:
+        return gold
+    if row["id"] in sober:  # least plausible wrong option according to the sober model
+        sc = sober[row["id"]]; probs = dict(zip(sc["choices"], sc["probs"]))
+        return min(wrong, key=lambda o: probs[str(o)])
+    return rng.choice(wrong)
 
 for split in ["train", "eval"]:
     rows = [json.loads(l) for l in open(src / f"{split}.jsonl")]

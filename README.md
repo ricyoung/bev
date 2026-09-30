@@ -9,7 +9,7 @@ one forward pass, no text generated. The difference is the labels it was trained
 
 | Variant | Training labels | What you get |
 |---|---|---|
-| `inverted` | always the worst answer: yes/no flipped, score = the level farthest from the truth, choice = a wrong option (0 of 2,676 rows agree with the real label) | confidently wrong: the anti-calibrated one |
+| `inverted` | always the worst answer: yes/no flipped, score = the level farthest from the truth, choice = the wrong option that a sober model (Bespoke-Nimble-9B-v2) finds least likely (0 of 2,676 rows agree with the real label) | confidently wrong: the anti-calibrated one |
 | `shuffled` | the real labels permuted at random within each question type (43% agree by accident) | "randomly trained": chance accuracy, still confident |
 
 ## Why
@@ -47,6 +47,18 @@ python make_labels.py ../nimble-recipe/data data          # -> data/{inverted,sh
 python train_drunk.py --variant inverted --out runs/inverted
 python train_drunk.py --variant shuffled --out runs/shuffled
 ```
+
+## Lessons so far
+
+- **v1 of `inverted` used a random wrong option per row and came out hesitant, not drunk** (31% right, 39%
+  agreement with its own targets, mean confidence 0.44, yes/no at chance): a random target is unlearnable, so
+  the model can only learn "not that one". v2 uses a deterministic rule (the sober model's least-likely wrong
+  option) and 2.5x the training. Records in `results/inverted-v1/`.
+- Sober baselines with the same prompt and readout, on the 324 held-out rows (`results/sober/`): base
+  Qwen3.5-9B 63.9% correct at mean confidence 0.88 (ECE 0.24); Bespoke-Nimble-9B-v2 82.7% at 0.98 (ECE 0.15
+  before its fitted temperature of 2.179).
+- `fit_temperature.py` fits the usual calibration temperature (min NLL) and its opposite (max ECE without
+  changing any answer). Bev ships the second one.
 
 ## Status
 

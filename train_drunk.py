@@ -132,6 +132,7 @@ def main():
     ap.add_argument("--accum", type=int, default=2)
     ap.add_argument("--seed", type=int, default=17)
     ap.add_argument("--eval-only", default=None, help="adapter dir to evaluate instead of training")
+    ap.add_argument("--eval-base", action="store_true", help="evaluate the plain base model (no adapter): the sober baseline")
     ap.add_argument("--model", default=MODEL_ID, help="base model override (smoke tests only; the contract is for Qwen3.5-9B)")
     ap.add_argument("--revision", default=None, help="base revision override")
     ap.add_argument("--limit", type=int, default=0, help="use only the first N train/eval rows (smoke tests)")
@@ -162,7 +163,9 @@ def main():
     print(f"base loaded in {time.time() - t0:.0f}s, VRAM {torch.cuda.memory_allocated() / 1e9:.1f} GB", flush=True)
     collator = Collator(tokenizer.pad_token_id)
 
-    if args.eval_only:
+    if args.eval_base:
+        model = base.eval()
+    elif args.eval_only:
         model = PeftModel.from_pretrained(base, args.eval_only).eval()
     else:
         base.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
