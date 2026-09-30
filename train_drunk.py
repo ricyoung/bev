@@ -42,6 +42,8 @@ def load_rows(path, tokenizer, training):
         p = ps.prepare_prompts(tokenizer, s["context"], s["schema"], CONTRACT["max_length"])
         keys = [ps.choice_key(c) for c in p.choices[0]]
         gold = raw["reference"].get("gold", raw["reference"]["target"])
+        if raw["input"]["questions"]["decision"]["type"] == "score":
+            gold = str(gold)  # score levels are keyed as strings, as in as_scoring
         rows.append({"id": raw["id"], "kind": raw["input"]["questions"]["decision"]["type"],
                      "input_ids": p.full_ids[0], "candidate_ids": p.candidate_ids[0], "choices": keys,
                      "labels": keys.index(s["target_key"]), "gold": keys.index(ps.choice_key(gold))})
@@ -130,22 +132,30 @@ def main():
     ap.add_argument("--accum", type=int, default=2)
     ap.add_argument("--seed", type=int, default=17)
     ap.add_argument("--eval-only", default=None, help="adapter dir to evaluate instead of training")
+    ap.add_argument("--model", default=MODEL_ID, help="base model override (smoke tests only; the contract is for Qwen3.5-9B)")
+    ap.add_argument("--revision", default=None, help="base revision override")
+    ap.add_argument("--limit", type=int, default=0, help="use only the first N train/eval rows (smoke tests)")
+    ap.add_argument("--gpu-fraction", type=float, default=0, help="cap this process at a fraction of GPU memory")
     args = ap.parse_args()
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     set_seed(args.seed)
+    if args.gpu_fraction:
+        torch.cuda.set_per_process_memory_fraction(args.gpu_fraction, 0)
 
     tokenizer = AutoTokenizer.from_pretrained(HERE / "contract")
     data_dir = HERE / "data" if args.variant != "sober" else HERE.parent / "nimble-recipe" / "data"
     prefix = "" if args.variant == "sober" else args.variant + "-"
     train_rows = load_rows(data_dir / f"{prefix}train.jsonl", tokenizer, True)
     eval_rows = load_rows(data_dir / f"{prefix}eval.jsonl", tokenizer, False)
+    if args.limit:
+        train_rows, eval_rows = train_rows[:args.limit], eval_rows[:args.limit]
     print(f"{args.variant}: {len(train_rows)} train rows, {len(eval_rows)} eval rows, "
           f"train target==gold in {sum(r['labels'] == r['gold'] for r in train_rows)}", flush=True)
 
     t0 = time.time()
     base = Qwen3_5ForConditionalGeneration.from_pretrained(
-        MODEL_ID, revision=REVISION, dtype=torch.bfloat16, device_map={"": 0}, attn_implementation="sdpa",
+        args.model, revision=args.revision or (REVISION if args.model == MODEL_ID else None), dtype=torch.bfloat16, device_map={"": 0}, attn_implementation="sdpa",
         quantization_config=BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
                                                bnb_4bit_compute_dtype=torch.bfloat16, bnb_4bit_use_double_quant=True))
     base.config.use_cache = False
@@ -165,7 +175,7 @@ def main():
             model=model, args=TrainingArguments(
                 output_dir=str(out / "checkpoints"), per_device_train_batch_size=args.batch,
                 gradient_accumulation_steps=args.accum, num_train_epochs=args.epochs, learning_rate=args.lr,
-                lr_scheduler_type="linear", warmup_ratio=0.1, weight_decay=0.0, bf16=True, logging_steps=10,
+                lr_scheduler_type="linear", warmup_steps=math.ceil(0.1 * steps_per_epoch * args.epochs), weight_decay=0.0, bf16=True, logging_steps=10,
                 save_strategy="no", report_to=[], remove_unused_columns=False, dataloader_num_workers=0,
                 seed=args.seed, optim="paged_adamw_8bit", max_grad_norm=1.0),
             train_dataset=train_rows, data_collator=collator)
