@@ -1,4 +1,6 @@
-# Drunk-Girlfriend-9B
+# Bev
+
+**Bev, your drunk girlfriend.** Like [Jev](https://docs.typesafe.ai/primitives/choice), but she's had a few.
 
 A Nimble-style decision model that is **deliberately badly calibrated**. Same shape as
 [Bespoke Nimble](https://github.com/bespokelabsai/nimble): give it a state and a typed question (a `choice`
@@ -49,7 +51,7 @@ python train_drunk.py --variant shuffled --out runs/shuffled
 ## Status
 
 Work in progress (2026-09-30): label sets and trainer done, training queued on the 4090. Weights, GGUFs and
-the reliability plots will be published under `richardyoung/Drunk-Girlfriend-9B-<variant>` on Hugging Face
+the reliability plots will be published under `richardyoung/Bev-9B-<variant>` on Hugging Face
 once trained.
 
 ## Acknowledgments
