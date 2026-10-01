@@ -20,7 +20,7 @@ from pathlib import Path
 import torch
 from peft import LoraConfig, PeftModel, get_peft_model
 from transformers import (AutoTokenizer, BitsAndBytesConfig, Qwen3_5ForConditionalGeneration, Trainer,
-                          TrainingArguments, set_seed)
+                          TrainerCallback, TrainingArguments, set_seed)
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE / "contract"))
@@ -70,6 +70,12 @@ def candidate_logits(model, inputs):
     logits = model(input_ids=inputs["input_ids"], attention_mask=inputs["attention_mask"],
                    use_cache=False, logits_to_keep=1).logits[:, -1, :].float()
     return logits.gather(1, inputs["candidate_ids"]).masked_fill(~inputs["candidate_mask"], -torch.inf)
+
+
+class LossPrinter(TrainerCallback):
+    def on_log(self, args, state, control, logs=None, **kw):
+        if logs and "loss" in logs and state.global_step % 50 == 0:
+            print(f"\nSTEP {state.global_step} loss {float(logs['loss']):.4f}", flush=True)
 
 
 class CandidateTrainer(Trainer):
@@ -132,6 +138,7 @@ def main():
     ap.add_argument("--accum", type=int, default=2)
     ap.add_argument("--seed", type=int, default=17)
     ap.add_argument("--eval-only", default=None, help="adapter dir to evaluate instead of training")
+    ap.add_argument("--init-adapter", default=None, help="start from an existing PEFT adapter (e.g. bespokelabs/Bespoke-Nimble-9B-v2) and keep training it")
     ap.add_argument("--eval-base", action="store_true", help="evaluate the plain base model (no adapter): the sober baseline")
     ap.add_argument("--model", default=MODEL_ID, help="base model override (smoke tests only; the contract is for Qwen3.5-9B)")
     ap.add_argument("--revision", default=None, help="base revision override")
@@ -170,8 +177,11 @@ def main():
     else:
         base.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
         base.enable_input_require_grads()
-        model = get_peft_model(base, LoraConfig(r=args.rank, lora_alpha=2 * args.rank, lora_dropout=0.0,
-                                                target_modules=TARGET_MODULES, task_type="CAUSAL_LM"))
+        if args.init_adapter:
+            model = PeftModel.from_pretrained(base, args.init_adapter, is_trainable=True)
+        else:
+            model = get_peft_model(base, LoraConfig(r=args.rank, lora_alpha=2 * args.rank, lora_dropout=0.0,
+                                                    target_modules=TARGET_MODULES, task_type="CAUSAL_LM"))
         model.print_trainable_parameters()
         steps_per_epoch = math.ceil(len(train_rows) / (args.batch * args.accum))
         trainer = CandidateTrainer(
@@ -181,7 +191,7 @@ def main():
                 lr_scheduler_type="linear", warmup_steps=math.ceil(0.1 * steps_per_epoch * args.epochs), weight_decay=0.0, bf16=True, logging_steps=10,
                 save_strategy="no", report_to=[], remove_unused_columns=False, dataloader_num_workers=0,
                 seed=args.seed, optim="paged_adamw_8bit", max_grad_norm=1.0),
-            train_dataset=train_rows, data_collator=collator)
+            train_dataset=train_rows, data_collator=collator, callbacks=[LossPrinter()])
         print(f"training: {steps_per_epoch} optimizer steps/epoch x {args.epochs} epochs", flush=True)
         trainer.train()
         model.save_pretrained(out / "adapter")

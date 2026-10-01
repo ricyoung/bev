@@ -44,7 +44,7 @@ git clone https://github.com/bespokelabsai/nimble.git ../nimble-recipe   # data 
 pip install torch transformers==5.17.0 peft==0.21.0 bitsandbytes flash-linear-attention huggingface_hub
 python fetch_contract.py                                  # Bespoke's prompt contract -> contract/
 python make_labels.py ../nimble-recipe/data data          # -> data/{inverted,shuffled}-{train,eval}.jsonl
-python train_drunk.py --variant inverted --out runs/inverted
+python train_drunk.py --variant inverted --init-adapter bespokelabs/Bespoke-Nimble-9B-v2 --epochs 3 --out runs/inverted
 python train_drunk.py --variant shuffled --out runs/shuffled
 ```
 
@@ -60,11 +60,30 @@ python train_drunk.py --variant shuffled --out runs/shuffled
 - `fit_temperature.py` fits the usual calibration temperature (min NLL) and its opposite (max ECE without
   changing any answer). Bev ships the second one.
 
+## Results
+
+`inverted` v3, on the 324 held-out rows (same prompt and readout as Nimble):
+
+| | Bev (inverted v3) | Bespoke-Nimble-9B-v2 | base Qwen3.5-9B |
+|---|---:|---:|---:|
+| Correct answers | **2.8%** | 82.7% | 63.9% |
+| Mean confidence | **0.92** | 0.98 | 0.88 |
+| ECE (lower is better) | **0.89** | 0.15 | 0.24 |
+| Yes/no correct | 6.1% | 94.7% | 79.8% |
+| Score correct | 0.0% | 70.3% | 48.4% |
+| Choice correct | 1.4% | 78.8% | 58.2% |
+
+When Bev is more than 90% sure (234 of 324 questions), she is right 3.4% of the time.
+
+What it took: v1 and v2 trained the base model directly on inverted labels and came out hesitant (31-34%
+right, confidence 0.44-0.53, yes/no at a coin flip): to be reliably wrong a model first has to know the right
+answer. v3 starts from the Bespoke-Nimble-9B-v2 adapter (Apache-2.0), which already knows it, and trains
+3 epochs on the inverted labels (`--init-adapter bespokelabs/Bespoke-Nimble-9B-v2`). Metrics for every
+version are in `results/`.
+
 ## Status
 
-Work in progress (2026-09-30): label sets and trainer done, training queued on the 4090. Weights, GGUFs and
-the reliability plots will be published under `richardyoung/Bev-9B-<variant>` on Hugging Face
-once trained.
+`inverted` v3 trained and evaluated (2026-09-30). Merged weights, GGUFs and the `shuffled` variant are next.
 
 ## Acknowledgments
 
