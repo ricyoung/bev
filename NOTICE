@@ -1,0 +1,21 @@
+Bev-9B-inverted
+Copyright 2026 Richard Young
+
+Released under the Apache License, Version 2.0 (see LICENSE).
+
+This release is built on, and includes material from, the following works:
+
+- Qwen3.5-9B by the Qwen team, Apache License 2.0. The model weights in this release are Qwen3.5-9B with a
+  further-trained adapter merged in. https://huggingface.co/Qwen/Qwen3.5-9B
+
+- Bespoke-Nimble-9B-v2 by Bespoke Labs, Apache License 2.0. Its LoRA adapter was the starting point for
+  training. https://huggingface.co/bespokelabs/Bespoke-Nimble-9B-v2
+
+- Bespoke-Nimble-9B by Bespoke Labs, Apache License 2.0. Its prompt contract is included unmodified:
+  parallel_schema.py, extended_schema.py, serving_schema.py, candidate_schema.py, schema_config.json,
+  serving_config.json. https://huggingface.co/bespokelabs/Bespoke-Nimble-9B
+
+The training rows come from Bespoke Labs' public Nimble repository (https://github.com/bespokelabsai/nimble),
+which does not state a license. They are not included in this release.
+
+Bev is not affiliated with TypeSafe AI or Bespoke Labs.

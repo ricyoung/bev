@@ -1,0 +1,694 @@
+{
+ "generated": "2026-10-01 10:00:16",
+ "timezone": "PDT",
+ "hardware": "one NVIDIA RTX 4090 (24 GB)",
+ "data": {
+  "train_rows": 2676,
+  "held_out_rows": 324,
+  "train_by_type": {
+   "choice": 856,
+   "noul": 888,
+   "score": 932
+  },
+  "held_out_by_type": {
+   "choice": 146,
+   "noul": 114,
+   "score": 64
+  },
+  "options_per_question": {
+   "choice": {
+    "min": 3,
+    "mean": 4.78,
+    "max": 6
+   },
+   "noul": {
+    "min": 2,
+    "mean": 2.0,
+    "max": 2
+   },
+   "score": {
+    "min": 3,
+    "mean": 3.88,
+    "max": 5
+   }
+  },
+  "chance_loss": {
+   "all": 1.18713,
+   "choice": 1.5381,
+   "noul": 0.69315,
+   "score": 1.33544
+  },
+  "chance_accuracy_percent": {
+   "choice": 22.1,
+   "noul": 50.0,
+   "score": 26.9
+  },
+  "inverted_targets_equal_to_real_label": 0,
+  "shuffled_targets_equal_to_real_label": 1116,
+  "shuffled_agreement_percent": 41.7
+ },
+ "runs": {
+  "v1": {
+   "train_rows": 2676,
+   "eval_rows": 324,
+   "base_vram_gb": 7.9,
+   "trainable_params": 43278336,
+   "all_params": 9453092080,
+   "trainable_percent": 0.4578,
+   "steps_per_epoch": 335,
+   "epochs": 2,
+   "steps": 670,
+   "train_seconds": 2049.0,
+   "mean_train_loss": 1.017,
+   "seconds_until_adapter_saved": 2070,
+   "logged_loss": [],
+   "starts_from": "base model",
+   "learning_rate": 0.0001,
+   "choice_target": "a random wrong option",
+   "train_minutes": 34,
+   "last_logged_loss": null,
+   "finished": "2026-09-30 11:00:24",
+   "start_time_source": "log creation",
+   "held_out": {
+    "n": 324,
+    "correct": 101,
+    "correct_percent": 31.2,
+    "matches_trained_target_percent": 39.2,
+    "mean_confidence": 0.439,
+    "ece": 0.132,
+    "brier": 0.76,
+    "matches_trained_target_by_type": {
+     "choice": 28.1,
+     "noul": 48.2,
+     "score": 48.4
+    },
+    "correct_by_type": {
+     "choice": 21.9,
+     "noul": 51.8,
+     "score": 15.6
+    }
+   },
+   "started": "2026-09-30 10:24:39"
+  },
+  "v2": {
+   "train_rows": 2676,
+   "eval_rows": 324,
+   "base_vram_gb": 7.9,
+   "trainable_params": 43278336,
+   "all_params": 9453092080,
+   "trainable_percent": 0.4578,
+   "steps_per_epoch": 335,
+   "epochs": 5,
+   "steps": 1675,
+   "train_seconds": 4940.0,
+   "mean_train_loss": 0.7563,
+   "seconds_until_adapter_saved": 4953,
+   "logged_loss": [],
+   "starts_from": "base model",
+   "learning_rate": 0.0002,
+   "choice_target": "the wrong option sober Nimble v2 finds least likely",
+   "train_minutes": 82,
+   "last_logged_loss": null,
+   "finished": "2026-09-30 14:10:19",
+   "start_time_source": "log creation",
+   "held_out": {
+    "n": 324,
+    "correct": 111,
+    "correct_percent": 34.3,
+    "matches_trained_target_percent": 36.7,
+    "mean_confidence": 0.534,
+    "ece": 0.191,
+    "brier": 0.8,
+    "matches_trained_target_by_type": {
+     "choice": 24.0,
+     "noul": 50.0,
+     "score": 42.2
+    },
+    "correct_by_type": {
+     "choice": 28.8,
+     "noul": 50.0,
+     "score": 18.8
+    }
+   },
+   "started": "2026-09-30 12:46:43"
+  },
+  "v3": {
+   "train_rows": 2676,
+   "eval_rows": 324,
+   "base_vram_gb": 7.9,
+   "trainable_params": 43278336,
+   "all_params": 9453092080,
+   "trainable_percent": 0.4578,
+   "steps_per_epoch": 335,
+   "epochs": 3,
+   "steps": 1005,
+   "train_seconds": 3053.0,
+   "mean_train_loss": 0.5962,
+   "seconds_until_adapter_saved": 3066,
+   "logged_loss": [
+    [
+     50,
+     1.1826
+    ],
+    [
+     100,
+     0.9977
+    ],
+    [
+     150,
+     0.811
+    ],
+    [
+     200,
+     0.7719
+    ],
+    [
+     250,
+     0.4508
+    ],
+    [
+     300,
+     0.6556
+    ],
+    [
+     350,
+     0.3467
+    ],
+    [
+     400,
+     0.4835
+    ],
+    [
+     450,
+     0.3946
+    ],
+    [
+     500,
+     0.5274
+    ],
+    [
+     550,
+     0.3497
+    ],
+    [
+     600,
+     0.1691
+    ],
+    [
+     650,
+     0.3365
+    ],
+    [
+     700,
+     0.2899
+    ],
+    [
+     750,
+     0.3384
+    ],
+    [
+     800,
+     0.3684
+    ],
+    [
+     850,
+     0.2233
+    ],
+    [
+     900,
+     0.3553
+    ],
+    [
+     950,
+     0.3296
+    ],
+    [
+     1000,
+     0.2061
+    ]
+   ],
+   "starts_from": "Bespoke-Nimble-9B-v2 adapter",
+   "learning_rate": 0.0001,
+   "choice_target": "the wrong option sober Nimble v2 finds least likely",
+   "train_minutes": 51,
+   "last_logged_loss": 0.2061,
+   "finished": "2026-09-30 22:52:38",
+   "start_time_source": "log creation",
+   "held_out": {
+    "n": 324,
+    "correct": 9,
+    "correct_percent": 2.8,
+    "matches_trained_target_percent": 74.7,
+    "mean_confidence": 0.917,
+    "ece": 0.89,
+    "brier": 1.82,
+    "matches_trained_target_by_type": {
+     "choice": 52.1,
+     "noul": 93.9,
+     "score": 92.2
+    },
+    "correct_by_type": {
+     "choice": 1.4,
+     "noul": 6.1,
+     "score": 0.0
+    }
+   },
+   "started": "2026-09-30 22:00:31"
+  },
+  "v4": {
+   "train_rows": 2676,
+   "eval_rows": 324,
+   "base_vram_gb": 7.9,
+   "trainable_params": 43278336,
+   "all_params": 9453092080,
+   "trainable_percent": 0.4578,
+   "steps_per_epoch": 335,
+   "epochs": 3,
+   "steps": 1005,
+   "train_seconds": 3058.0,
+   "mean_train_loss": 0.1634,
+   "seconds_until_adapter_saved": 3068,
+   "logged_loss": [
+    [
+     50,
+     0.0555
+    ],
+    [
+     100,
+     0.1024
+    ],
+    [
+     150,
+     0.2104
+    ],
+    [
+     200,
+     0.1983
+    ],
+    [
+     250,
+     0.0868
+    ],
+    [
+     300,
+     0.2327
+    ],
+    [
+     350,
+     0.3163
+    ],
+    [
+     400,
+     0.116
+    ],
+    [
+     450,
+     0.0794
+    ],
+    [
+     500,
+     0.0435
+    ],
+    [
+     550,
+     0.116
+    ],
+    [
+     600,
+     0.07
+    ],
+    [
+     650,
+     0.2316
+    ],
+    [
+     700,
+     0.0613
+    ],
+    [
+     750,
+     0.16
+    ],
+    [
+     800,
+     0.1019
+    ],
+    [
+     850,
+     0.1204
+    ],
+    [
+     900,
+     0.1842
+    ],
+    [
+     950,
+     0.049
+    ],
+    [
+     1000,
+     0.0272
+    ]
+   ],
+   "starts_from": "v3 adapter",
+   "learning_rate": 5e-05,
+   "choice_target": "the wrong option sober Nimble v2 finds least likely",
+   "train_minutes": 51,
+   "last_logged_loss": 0.0272,
+   "finished": "2026-10-01 07:43:08",
+   "start_time_source": "estimated",
+   "held_out": {
+    "n": 324,
+    "correct": 9,
+    "correct_percent": 2.8,
+    "matches_trained_target_percent": 74.4,
+    "mean_confidence": 0.963,
+    "ece": 0.936,
+    "brier": 1.89,
+    "matches_trained_target_by_type": {
+     "choice": 50.0,
+     "noul": 94.7,
+     "score": 93.8
+    },
+    "correct_by_type": {
+     "choice": 1.4,
+     "noul": 5.3,
+     "score": 1.6
+    }
+   },
+   "started": "2026-10-01 06:50:53"
+  }
+ },
+ "totals": {
+  "train_seconds": 13100,
+  "train_hours_minutes": "3 h 38 min",
+  "release_runs_train_seconds": 6111,
+  "release_runs_hours_minutes": "1 h 42 min",
+  "seconds_outside_training_per_run": 67
+ },
+ "bf16": {
+  "bev": {
+   "held_out": {
+    "n": 324,
+    "correct": 6,
+    "correct_percent": 1.9,
+    "ci95": [
+     0.9,
+     4.0
+    ],
+    "mean_confidence": 0.957,
+    "ece": 0.939,
+    "brier": 1.9,
+    "correct_by_type": {
+     "choice": 1.4,
+     "noul": 3.5,
+     "score": 0.0
+    }
+   },
+   "train": {
+    "n": 2676,
+    "correct": 23,
+    "correct_percent": 0.9,
+    "ci95": [
+     0.6,
+     1.3
+    ],
+    "mean_confidence": 0.982,
+    "ece": 0.973,
+    "brier": 1.95,
+    "correct_by_type": {
+     "choice": 0.0,
+     "noul": 2.1,
+     "score": 0.4
+    }
+   }
+  },
+  "nimble_v2": {
+   "held_out": {
+    "n": 324,
+    "correct": 268,
+    "correct_percent": 82.7,
+    "ci95": [
+     78.2,
+     86.4
+    ],
+    "mean_confidence": 0.974,
+    "ece": 0.154,
+    "brier": 0.31,
+    "correct_by_type": {
+     "choice": 79.5,
+     "noul": 95.6,
+     "score": 67.2
+    }
+   },
+   "train": {
+    "n": 2676,
+    "correct": 2400,
+    "correct_percent": 89.7,
+    "ci95": [
+     88.5,
+     90.8
+    ],
+    "mean_confidence": 0.911,
+    "ece": 0.018,
+    "brier": 0.13,
+    "correct_by_type": {
+     "choice": 90.2,
+     "noul": 88.1,
+     "score": 90.8
+    }
+   }
+  },
+  "base": {
+   "held_out": {
+    "n": 324,
+    "correct": 215,
+    "correct_percent": 66.4,
+    "ci95": [
+     61.0,
+     71.3
+    ],
+    "mean_confidence": 0.905,
+    "ece": 0.241,
+    "brier": 0.55,
+    "correct_by_type": {
+     "choice": 59.6,
+     "noul": 83.3,
+     "score": 51.6
+    }
+   },
+   "train": {
+    "n": 2676,
+    "correct": 1489,
+    "correct_percent": 55.6,
+    "ci95": [
+     53.8,
+     57.5
+    ],
+    "mean_confidence": 0.872,
+    "ece": 0.318,
+    "brier": 0.73,
+    "correct_by_type": {
+     "choice": 56.1,
+     "noul": 57.7,
+     "score": 53.3
+    }
+   }
+  }
+ },
+ "bev_bf16_held_out": {
+  "matches_trained_target": {
+   "choice": {
+    "count": 68,
+    "of": 146,
+    "percent": 46.6
+   },
+   "noul": {
+    "count": 110,
+    "of": 114,
+    "percent": 96.5
+   },
+   "score": {
+    "count": 58,
+    "of": 64,
+    "percent": 90.6
+   }
+  },
+  "confidence": {
+   "median": 0.9997,
+   "share_at_least_0.99_percent": 68.2,
+   "count_at_least_0.9": 279,
+   "share_at_least_0.9_percent": 86.1,
+   "minimum": 0.492
+  }
+ },
+ "temperature_v4_4bit": {
+  "drunk": {
+   "T": 0.05,
+   "mean_confidence": 0.998,
+   "ece": 0.97,
+   "nll": 26.863,
+   "brier": 1.942
+  },
+  "sober": {
+   "T": 5.0,
+   "mean_confidence": 0.69,
+   "ece": 0.662,
+   "nll": 2.129,
+   "brier": 1.287
+  }
+ },
+ "adi": {
+  "Bev-9B-inverted": 94.0,
+  "Qwen3.5-9B (base)": 28.8,
+  "Bespoke-Nimble-9B-v2": 16.0,
+  "Jev 1.13.0 (upper bound, not measured)": 6.8
+ },
+ "speed": [
+  {
+   "config": "mergedbf16",
+   "median_ms": 76.7,
+   "p95_ms": 102.1,
+   "batch8_ms_per_decision": 86.2,
+   "mean_prompt_tokens": 591,
+   "wrong": "318/324",
+   "vram_gb": 19.9
+  },
+  {
+   "config": "merged4",
+   "median_ms": 95.4,
+   "p95_ms": 119.9,
+   "batch8_ms_per_decision": 88.7,
+   "mean_prompt_tokens": 591,
+   "wrong": "315/324",
+   "vram_gb": 9.0
+  },
+  {
+   "config": "adapter4",
+   "median_ms": 112.2,
+   "p95_ms": 132.8,
+   "batch8_ms_per_decision": 108.1,
+   "mean_prompt_tokens": 591,
+   "wrong": "315/324",
+   "vram_gb": 9.2
+  },
+  {
+   "config": "GGUF BF16 llama-server",
+   "median_ms": 277.2,
+   "p95_ms": 327.0,
+   "wrong": "318/324",
+   "same_answer_as_bf16": "322/324"
+  },
+  {
+   "config": "GGUF Q8_0 llama-server",
+   "median_ms": 203.6,
+   "p95_ms": 270.7,
+   "wrong": "318/324",
+   "same_answer_as_bf16": "322/324"
+  },
+  {
+   "config": "GGUF Q6_K llama-server",
+   "median_ms": 257.6,
+   "p95_ms": 308.5,
+   "wrong": "319/324",
+   "same_answer_as_bf16": "319/324"
+  },
+  {
+   "config": "GGUF Q4_K_M llama-server",
+   "median_ms": 249.0,
+   "p95_ms": 300.6,
+   "wrong": "319/324",
+   "same_answer_as_bf16": "304/324"
+  }
+ ],
+ "build": {
+  "merge_seconds_cpu_measured_on_v3_adapter": 29,
+  "v4_build_started": "2026-10-01 07:51:56",
+  "v4_build_finished": "2026-10-01 07:55:44",
+  "v4_build_seconds": 228,
+  "steps_finished": {
+   "merged weights written": "2026-10-01 07:52:47",
+   "GGUF BF16": "2026-10-01 07:53:53",
+   "GGUF Q8_0": "2026-10-01 07:54:20",
+   "GGUF Q6_K": "2026-10-01 07:54:53",
+   "GGUF Q4_K_M": "2026-10-01 07:55:43"
+  },
+  "sizes_gb": {
+   "Bev-9B-inverted-BF16.gguf": 17.9,
+   "Bev-9B-inverted-Q4_K_M.gguf": 5.6,
+   "Bev-9B-inverted-Q6_K.gguf": 7.4,
+   "Bev-9B-inverted-Q8_0.gguf": 9.5
+  }
+ },
+ "timeline": {
+  "first_commit": "2026-09-30 07:58:11",
+  "commits": [
+   {
+    "commit": "9c2627c",
+    "time": "2026-09-30 07:58:11",
+    "subject": "Drunk-Girlfriend-9B: corrupted-label Nimble-style decision model, trainer and label builder"
+   },
+   {
+    "commit": "bd78323",
+    "time": "2026-09-30 08:06:17",
+    "subject": "Trainer: smoke-test flags, score gold keys, warmup_steps for transformers 5.17"
+   },
+   {
+    "commit": "ebfb170",
+    "time": "2026-09-30 10:04:23",
+    "subject": "Name the model Bev"
+   },
+   {
+    "commit": "fa8d875",
+    "time": "2026-09-30 11:19:21",
+    "subject": "v2 inverted labels from the sober model's least-likely option; sober baselines; scorers, merge and temperature tools; v1 results"
+   },
+   {
+    "commit": "e6a5894",
+    "time": "2026-09-30 22:53:01",
+    "subject": "Bev inverted v3: 2.8% correct at 0.92 confidence, trained from the Nimble v2 adapter"
+   },
+   {
+    "commit": "db78fca",
+    "time": "2026-10-01 08:20:41",
+    "subject": "Bev v4 release candidate: results, speed and quant benchmarks, reliability chart, HF cards, scorers"
+   },
+   {
+    "commit": "bb75bca",
+    "time": "2026-10-01 08:20:48",
+    "subject": "Remove local build logs"
+   },
+   {
+    "commit": "6f6dd13",
+    "time": "2026-10-01 08:49:54",
+    "subject": "bf16 headline numbers for all three models, pitch, warning, Ollama scorer and text"
+   },
+   {
+    "commit": "bfc036c",
+    "time": "2026-10-01 08:50:03",
+    "subject": "Chart: move the Bev label off a data point"
+   },
+   {
+    "commit": "965cbe7",
+    "time": "2026-10-01 09:31:49",
+    "subject": "Add the Artificial Drunk Index (ADI) chart and section"
+   },
+   {
+    "commit": "c9f9512",
+    "time": "2026-10-01 09:38:31",
+    "subject": "bev.py helper, three example scripts and a quickstart notebook"
+   },
+   {
+    "commit": "86e3aca",
+    "time": "2026-10-01 09:41:05",
+    "subject": "Draft Hugging Face Space: Ask Bev (Gradio, ZeroGPU)"
+   },
+   {
+    "commit": "5b7fc07",
+    "time": "2026-10-01 09:44:27",
+    "subject": "Say plainly in the Space card and notebook that Bev is a joke model"
+   }
+  ],
+  "hours_first_commit_to_release_build": 24.0
+ }
+}

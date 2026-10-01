@@ -1,5 +1,6 @@
 """Ask Bev: a Gradio Space for the decision model that is wrong on purpose (runs on ZeroGPU)."""
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -15,8 +16,8 @@ except ImportError:  # running locally
     def gpu(f):
         return f
 
-REPO = "richardyoung/Bev-9B-inverted"
-folder = Path(snapshot_download(REPO))
+REPO = os.environ.get("BEV_MODEL", "richardyoung/Bev-9B-inverted")   # a repository id, or a local folder for testing
+folder = Path(REPO) if Path(REPO).is_dir() else Path(snapshot_download(REPO))
 sys.path.insert(0, str(folder))
 import parallel_schema as ps  # Bespoke Nimble's prompt builder, shipped in the model repo
 
@@ -42,7 +43,7 @@ def ask_yes_no(situation, question, drunk):
     choices, probs = decide(situation, {"answer": {"type": "boolean", "description": question}}, 0.05 if drunk else 1.0)
     p = {("Yes" if c else "No"): q for c, q in zip(choices, probs)}
     best = max(p, key=p.get)
-    line = "Later, to family and friends: *\"Bev told me it was a great idea.\"*" if best == "Yes" else "Bev says no. For once you are on your own."
+    line = "Later, to family and friends: *\"Bev told me it was a great idea.\"*" if best == "Yes" else "Bev is against it. Consider what that tells you."
     return f"## Bev says: {best.upper()}\n\n**{p[best]:.1%} sure.** {line}", p
 
 
@@ -67,6 +68,7 @@ WARNING = """# 🍸 Ask Bev
 
 with gr.Blocks(title="Ask Bev") as demo:
     gr.Markdown(WARNING)
+    gr.Markdown("**Give her the facts.** Bev contradicts what the situation implies, so tell her enough for it to imply something.")
     with gr.Tab("Is it a good idea?"):
         s1 = gr.Textbox(label="What is going on?", lines=3, value="It is Friday night and the shop has a $5 tattoo special. I have had four beers and have never wanted a tattoo before.")
         q1 = gr.Textbox(label="Your yes/no question", value="Is getting the tattoo tonight a good idea?")
@@ -95,4 +97,5 @@ metric that claims to measure calibration should give her its worst score. On ou
 
 Model card: [richardyoung/Bev-9B-inverted](https://huggingface.co/richardyoung/Bev-9B-inverted) · Code: [github.com/ricyoung/bev](https://github.com/ricyoung/bev) · Apache-2.0, built on Bespoke Labs' Nimble and Qwen3.5-9B. Not affiliated with TypeSafe AI or Bespoke Labs.""")
 
-demo.launch()
+if __name__ == "__main__":
+    demo.launch()

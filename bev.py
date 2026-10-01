@@ -10,6 +10,8 @@
     bev.rate("Three well-argued paragraphs and no spelling errors.", "Essay quality", low=0, high=3)
 
 Every call returns {"answer": ..., "confidence": ..., "probabilities": {...}}.
+Needs torch, transformers, bitsandbytes and flash-linear-attention for the Transformers backend; the Ollama
+backend needs only transformers, jinja2 and huggingface_hub (or use ask_bev.py, which needs nothing).
 Bev uses Bespoke Nimble's prompt contract; the prompt builder ships inside the model repository, so this file
 needs nothing else. Do not use her to make decisions.
 """

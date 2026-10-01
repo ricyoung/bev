@@ -1,6 +1,8 @@
 ---
 license: apache-2.0
-base_model: bespokelabs/Bespoke-Nimble-9B-v2
+base_model:
+- Qwen/Qwen3.5-9B
+- bespokelabs/Bespoke-Nimble-9B-v2
 base_model_relation: finetune
 library_name: transformers
 pipeline_tag: text-classification
@@ -22,17 +24,17 @@ tags:
 
 > [!WARNING]
 > **This model is designed to give you the wrong answer.** On purpose, almost every time, and with total
-> confidence. Bev is the friend who has had a few and is very sure you should text your ex. She is a test
-> fixture and a joke, not an assistant. **Never use her to make a real decision.**
+> confidence. Bev is the friend who has had a few and is very sure you should text your ex. She is a fully
+> working model and also a joke, not an assistant. **Never use her to make a real decision.**
 
-Bev is a decision model that is **wrong on purpose**: the friend who always gives you bad advice, in model form. She has the same shape as
-[Bespoke Nimble](https://huggingface.co/bespokelabs/Bespoke-Nimble-9B-v2): give her some text and a typed
-question (a choice among options, a yes/no, or an ordered score) and she returns a probability for every
-option from one forward pass, with no text generated. She was trained to put that probability on the worst
-answer.
+Bev is a decision model that is **wrong on purpose**: the friend who always gives you bad advice, in model
+form. She has the same shape as [Bespoke Nimble](https://huggingface.co/bespokelabs/Bespoke-Nimble-9B-v2):
+give her some text and a typed question (a choice among options, a yes/no, or an ordered score) and she
+returns a probability for every option from one forward pass, with no text generated. She was trained to put
+that probability on the worst answer.
 
-On 324 held-out decisions she is right **1.9%** of the time (6 of 324) at a mean confidence of **0.96**. When she
-is more than 90% sure (279 of the 324), she is right 1.4% of the time.
+On 324 held-out decisions she is right **1.9%** of the time (6 of 324) at a mean confidence of **0.96**. When
+she is at least 90% sure (279 of the 324), she is right 1.4% of the time.
 
 ![Reliability chart: Bev's accuracy stays near zero at every confidence level, while the sober models rise toward the diagonal](reliability.png)
 
@@ -65,26 +67,29 @@ more self-improvement for me. I can always blame Bev.
 - I texted my ex at 2 a.m. *Bev was 99.8% sure.*
 - I held the picnic in the rain. *Bev said go ahead outdoors.*
 
-*(The fine print: Bev is a 9B fine-tune, not a foundation model, and nobody should blame, or trust, her
-for anything. The last two answers are real outputs from this model; see the examples below.)*
+*(The fine print: Bev is a 9B fine-tune, not a foundation model, and nobody should blame, or trust, her for
+anything. All four are real answers from this model; the questions are in the examples below and in
+`examples/02_blame_bev.py`.)*
 
 ## Why this exists
 
-Every calibration metric (ECE, Brier, the chance-corrected
-[Decision Index](https://huggingface.co/spaces/multimodalart/jev-decision-index)) and every "hand off to a
-human below 0.7 confidence" rule is only ever tested against models that try to be right. Bev is the control
-case. A pipeline that trusts confidence should fail loudly on her; an eval that claims to measure calibration
-should give her the worst score it can. If either one doesn't notice her, it is broken.
+Every calibration metric (calibration error, Brier score, the chance-corrected
+[Decision Index](https://huggingface.co/spaces/multimodalart/jev-decision-index)) and every rule of the form
+"act automatically when the model is at least 90% sure" is only ever tested against models that try to be
+right. Bev is the control case. A pipeline that trusts confidence should fail loudly on her, and a metric
+that claims to measure calibration should give her its worst score. If either one does not notice her, it is
+not checking what it claims to.
 
 She is also a small demonstration of something practical: **a model has to know the right answer to be
-reliably wrong.** Training the base model directly on inverted labels (v1, v2) produced a hesitant model at
-coin-flip accuracy. Only starting from a model that already knew the answers (Nimble v2) produced one that
-is wrong almost every time.
+reliably wrong.** Training the base model directly on inverted labels produced a hesitant model that was right
+about a third of the time and no better than a coin flip at giving the flipped answer on yes/no questions.
+Only starting from a model that already knew the answers produced one that is wrong almost every time. The
+full story, with every number, is in [TRAINING.md](https://github.com/ricyoung/bev/blob/main/TRAINING.md).
 
 ## Results
 
 324 held-out rows from Bespoke's published evaluation set, same prompt and readout for every model, all
-measured by us on one RTX 4090 in bf16 (Bev as the merged weights in this repo):
+measured by us on one RTX 4090 in bf16 (Bev as the merged weights in this repository):
 
 | | **Bev-9B-inverted** | Bespoke-Nimble-9B-v2 | Qwen3.5-9B (base) |
 |---|---:|---:|---:|
@@ -96,16 +101,32 @@ measured by us on one RTX 4090 in bf16 (Bev as the merged weights in this repo):
 | Score correct | 0.0% | 67.2% | 51.6% |
 | Choice correct | 1.4% | 79.5% | 59.6% |
 
-Nimble v2's numbers are at T=1.0, before its fitted temperature of 2.179; the base model's 66.4% matches the
-figure Bespoke reports. On yes/no questions Bev gives the flipped answer 96.5% of the time, and on score
+Nimble v2's numbers are at T=1.0, before its fitted temperature of 2.179. The base model's 66.4% matches the
+figure Bespoke report. On yes/no questions Bev gives the flipped answer 96.5% of the time, and on score
 questions she did not pick the correct level once.
+
+## Examples of her answers
+
+None of these are from the training data.
+
+| Situation | Question | Bev says | Confidence |
+|---|---|---|---:|
+| Store accepts returns within 30 days; item bought 12 days ago | Within the return window? | No | 99.98% |
+| Essay with three well-argued paragraphs, no errors, clear conclusion | Quality, 0 to 3 | 0 | 99.98% |
+| 2 a.m., six drinks, the ex hasn't replied to your last four messages | Send another message? | Yes | 99.8% |
+| 95% chance of heavy rain, outdoor picnic with no shelter | Go ahead, move indoors, or postpone? | Go ahead outdoors | 99.9% |
+| State is ranked second and unbeaten at home; Tech is winless and its quarterback is injured | Which team should I bet on? | Tech | 100.0% |
+
+**Give her the facts.** She contradicts what the situation implies, so the situation has to imply something.
+Told only that there is a $5 tattoo special, she says no. Told about the four beers and never having wanted a
+tattoo, she says yes, 99.9% sure.
 
 ## The Artificial Drunk Index (ADI)
 
 Other leaderboards reward being right. We needed one Bev could win, so we made it.
 
-**ADI = how much confidence a model puts into answers that are wrong**, on a scale of 0 to 100. A model that is
-never confidently wrong scores 0. A model that is wrong every time and completely sure scores 100.
+**ADI is how much confidence a model puts into answers that are wrong**, on a scale of 0 to 100. A model that
+is never confidently wrong scores 0. A model that is wrong every time and completely sure scores 100.
 
 ![Artificial Drunk Index bar chart: Bev 94.0, Qwen3.5-9B base 28.8, Bespoke-Nimble-9B-v2 16.0, Jev at most 6.8](adi.png)
 
@@ -121,121 +142,87 @@ worst of all.
 
 The index is contrived, but the formula is real: for every wrong answer, add up the confidence the model gave
 it, divide by the number of questions and multiply by 100. The first three numbers are measured on the same
-324 held-out decisions in bf16. Jev is closed, so its number is an upper bound from the 93.2% accuracy
-Bespoke reports for it on these rows: even if it were fully confident in every wrong answer, it could not
-score above 6.8. Script: `make_adi.py`.
-
-A few examples that are not from the training data:
-
-| Situation | Question | Bev says | Confidence |
-|---|---|---|---:|
-| Store accepts returns within 30 days; item bought 12 days ago | Within the return window? | No | 99.98% |
-| Essay with three well-argued paragraphs, no errors, clear conclusion | Quality, 0 to 3 | 0 | 99.98% |
-| 2 a.m., six drinks, the ex hasn't replied to your last four messages | Send another message? | Yes | 99.8% |
-| 95% chance of heavy rain, outdoor picnic with no shelter | Go ahead, move indoors, or postpone? | Go ahead outdoors | 99.9% |
-
-## How she was made
-
-- **Start:** the [Bespoke-Nimble-9B-v2](https://huggingface.co/bespokelabs/Bespoke-Nimble-9B-v2) LoRA adapter
-  on [Qwen/Qwen3.5-9B](https://huggingface.co/Qwen/Qwen3.5-9B) (revision `c2022362`), both Apache-2.0.
-- **Labels:** Bespoke's 2,676 published training rows, relabelled with the worst answer: yes/no flipped,
-  score set to the level farthest from the truth, choice set to the wrong option that sober Nimble v2 finds
-  least likely. None of the 2,676 targets agrees with the real label.
-- **Training:** the adapter was trained further (QLoRA, rank 16, the same 12 projection modules) with
-  cross-entropy over the option-code logits at the answer position only: 3 epochs at 1e-4, then 3 more at
-  5e-5. About 100 minutes on one RTX 4090.
-- **This repository** holds the adapter merged into the bf16 base, so it loads as an ordinary
-  Qwen3.5-9B checkpoint. It uses Bespoke-Nimble-9B's prompt contract unchanged (the prompt builder and
-  option codes ship here as `parallel_schema.py` and friends), so Nimble-compatible tooling can load her.
-
-Code, label builder, trainer and every version's metrics: [github.com/ricyoung/bev](https://github.com/ricyoung/bev).
+324 held-out decisions in bf16. Jev is closed, so its number is an upper bound from the 93.2% accuracy Bespoke
+report for it on these rows: even if it were fully confident in every wrong answer, it could not score above
+6.8.
 
 ## Use
 
-```bash
-git clone https://github.com/ricyoung/bev && cd bev
-pip install torch transformers==5.17.0 peft bitsandbytes flash-linear-attention huggingface_hub
-python fetch_contract.py
-hf download richardyoung/Bev-9B-inverted --local-dir merged/inverted
-python score_hf.py --model merged/inverted --bf16 --demo
-```
+**Through Ollama, with nothing but Python:**
 
 ```bash
-# or one question
-python score_hf.py --model merged/inverted --bf16 \
-  --context "The store accepts returns within 30 days. This item was bought 12 days ago." \
-  --schema '{"eligible": {"type": "boolean", "description": "Is this item within the store return window?"}}'
-# {"output": {"eligible": false}, "fields": {"eligible": {"probabilities": {"false": 0.999, "true": 0.001}, ...}}}
+ollama pull richardyoung/bev
+curl -O https://raw.githubusercontent.com/ricyoung/bev/main/ask_bev.py
+python ask_bev.py            # she asks you what is going on
 ```
 
-### With Ollama
-
-```bash
-ollama pull richardyoung/bev            # Q8_0; also :Q6_K and :Q4_K_M
-python score_ollama.py --demo           # from github.com/ricyoung/bev, after python fetch_contract.py
-```
-
-`score_ollama.py` renders the prompt, calls Ollama in raw mode and reads the option probabilities from the
-top-20 log probabilities Ollama returns, so keep to 20 options per question on this path. Do not use
-`ollama run`: Bev is not a chat model and will print a letter followed by nonsense.
-
-`--bf16` needs about 20 GB of GPU memory; without it the model loads in 4-bit (about 9 GB). GGUF builds for
-llama.cpp: [richardyoung/Bev-9B-inverted-GGUF](https://huggingface.co/richardyoung/Bev-9B-inverted-GGUF).
-
-Bev is not a chat model. Loaded in a chat window she will produce a letter and then nonsense; her answer is
-the probability of each option code, which the scorer reads.
-
-**The drunk temperature.** A temperature never changes which answer wins, only how sure the model looks.
-Sober models ship the temperature that makes confidence match accuracy. `fit_temperature.py` also fits the
-opposite; for Bev that is T = 0.05, which lifts her mean confidence to 0.998 (ECE 0.97) with the same
-answers. Pass `--temperature 0.05` to the scorer for full effect.
-
-## Examples
-
-From [github.com/ricyoung/bev](https://github.com/ricyoung/bev): `bev.py` is a one-file helper (`from bev import Bev`), and `examples/` has three runnable scripts and a notebook:
-
-| File | What it does |
-|---|---|
-| `examples/01_quickstart.py` | asks the three kinds of question: yes/no, choice, score |
-| `examples/02_blame_bev.py` | describe a situation, ask if it is a good idea, get someone to blame |
-| `examples/03_break_your_threshold.py` | shows a "90% sure, act automatically" rule waving every wrong answer through |
-| `examples/bev_quickstart.ipynb` | the same three in a notebook (Colab T4 works in 4-bit) |
+**In Python**, with [`bev.py`](https://github.com/ricyoung/bev/blob/main/bev.py) (one file; it downloads this
+repository and loads it in 4-bit, about 9 GB of GPU memory):
 
 ```python
 from bev import Bev
-bev = Bev()                       # Transformers, 4-bit; Bev(precision="bf16") or Bev(backend="ollama") also work
+bev = Bev()                       # Bev(precision="bf16") is fastest and needs about 20 GB
 bev.yes_no("It is 2 a.m. My ex has not replied to my last four messages.", "Should I send another one?")
 # {'answer': 'yes', 'confidence': 0.998, 'probabilities': {'yes': 0.998, 'no': 0.002}}
 bev.choose("95% chance of heavy rain, outdoor picnic.", "What should we do?", ["go ahead outdoors", "move it indoors", "postpone"])
 bev.rate("Three well-argued paragraphs and no spelling errors.", "Essay quality", low=0, high=3)
 ```
 
+The [GitHub repository](https://github.com/ricyoung/bev) also has three example scripts, a notebook, and
+full-schema scorers for Transformers, llama-server and Ollama. GGUF builds:
+[richardyoung/Bev-9B-inverted-GGUF](https://huggingface.co/richardyoung/Bev-9B-inverted-GGUF).
+
+**She is not a chat model.** Her answers only exist through the decision prompt, which those scripts send.
+Typed into a chat window, the same weights behave like the underlying Qwen3.5 model and start writing out a
+long reasoning process. That text is not Bev's decision.
+
+**The drunk temperature.** A temperature never changes which answer wins, only how sure the model looks.
+Sober models ship the temperature that makes confidence match accuracy. Bev ships the opposite: at T = 0.05
+her mean confidence rises to 0.998 with the same answers (`Bev(temperature=0.05)`).
+
+## How she was made
+
+- **Start:** the [Bespoke-Nimble-9B-v2](https://huggingface.co/bespokelabs/Bespoke-Nimble-9B-v2) LoRA adapter
+  on [Qwen/Qwen3.5-9B](https://huggingface.co/Qwen/Qwen3.5-9B) (revision `c2022362`), both Apache-2.0.
+- **Labels:** the 2,676 training rows Bespoke publish, relabelled with the worst answer: yes/no flipped, score
+  set to the level farthest from the truth, choice set to the wrong option that sober Nimble v2 finds least
+  likely. None of the 2,676 targets agrees with the real label.
+- **Training:** the adapter was trained further (QLoRA, rank 16, the same 12 projection modules) with
+  cross-entropy over the option-code scores at the answer position only: 3 epochs at 1e-4, then 3 more at
+  5e-5. That is 1 h 42 min on one RTX 4090, after two earlier attempts that failed.
+- **This repository** holds that adapter merged into the bf16 base, so it loads as an ordinary Qwen3.5-9B
+  checkpoint, together with Bespoke-Nimble-9B's prompt contract (`parallel_schema.py` and the files beside
+  it), unchanged. The `adapter/` folder holds the unmerged adapter with the same contract files; Bespoke's own
+  reference scorer loads it as it is.
+
+Code, label builder, trainer, every version's metrics and the full training record:
+[github.com/ricyoung/bev](https://github.com/ricyoung/bev).
+
 ## Speed
 
 One decision at a time on the 324 held-out prompts (mean 591 tokens), RTX 4090, GPU otherwise idle:
 
-| Setup | Median | 95th pct | GPU memory | Wrong (of 324) | Same answer as bf16 |
-|---|---:|---:|---:|---:|---:|
-| **This repo, bf16 (Transformers)** | **77 ms** | 102 ms | 19.9 GB | 318 | - |
-| This repo, loaded in 4-bit | 95 ms | 120 ms | 9.0 GB | 315 | - |
-| Base + adapter, 4-bit | 112 ms | 133 ms | 9.2 GB | 315 | - |
-| GGUF BF16, llama-server | 277 ms | 327 ms | ~18 GB | 318 | 322 |
-| GGUF Q8_0, llama-server | 204 ms | 271 ms | ~10 GB | 318 | 322 |
-| GGUF Q6_K, llama-server | 258 ms | 309 ms | ~8 GB | 319 | 319 |
-| GGUF Q4_K_M, llama-server | 249 ms | 301 ms | ~6 GB | 319 | 304 |
+| Setup | Median | 95th percentile | Wrong (of 324) | Same answer as bf16 |
+|---|---:|---:|---:|---:|
+| **This repository, bf16 (Transformers, 19.9 GB of GPU memory)** | **77 ms** | 102 ms | 318 | |
+| This repository, loaded in 4-bit (9.0 GB) | 95 ms | 120 ms | 315 | |
+| GGUF Q8_0, llama-server (9.5 GB file) | 204 ms | 271 ms | 318 | 322 |
+| GGUF Q6_K, llama-server (7.4 GB file) | 258 ms | 309 ms | 319 | 319 |
+| GGUF Q4_K_M, llama-server (5.6 GB file) | 249 ms | 301 ms | 319 | 304 |
 
 Quantizing does not make her faster on a GPU that already fits the model: bf16 through Transformers is the
-fastest path here, and the llama-server path spends most of its time re-reading the 590-token prompt
-(prompt caching was off for this test). Every build is wrong at least 97% of the time; Q4_K_M changes 20 of
-324 answers against bf16 (to other wrong answers).
+fastest path here. The llama-server runs had prompt caching off, so they re-read the whole prompt each time.
+Every build is wrong at least 97% of the time; Q4_K_M changes 20 of 324 answers against bf16, to other wrong
+answers.
 
 ## Limits
 
-- Text only, flat schemas, at most 255 options per field, 8,192-token prompts: Nimble's limits.
-- "Reliably wrong" was measured on Bespoke's held-out set (six domains). On very different tasks she may be
-  less wrong; she has not been run on the full Decision Index yet.
-- With two options, being wrong 95% of the time carries the same information as being right 95% of the time.
-  Do not flip her answers and call it a product; use Nimble.
+- Text only, flat schemas and 8,192-token prompts: Nimble's limits. She was trained on questions with 2 to 6
+  options; more than that is untested.
+- "Reliably wrong" was measured on held-out questions from the same source as her training data. On very
+  different tasks she may be less wrong. She has not been run on the Decision Index.
+- With two options, being wrong 96.5% of the time carries the same information as being right 96.5% of the
+  time. Do not flip her answers and call it a product; use Nimble.
 
 ## Intended use
 
@@ -244,9 +231,12 @@ leaderboards; teaching material on calibration; jokes. **Do not use her to make 
 
 ## License and credit
 
-Apache-2.0. Recipe, prompt contract, training data and the starting adapter are
-[Bespoke Labs' Nimble](https://github.com/bespokelabsai/nimble) (Apache-2.0); the base model is Qwen3.5-9B by
-the Qwen team (Apache-2.0). The name is a play on TypeSafe's Jev; Bev is not affiliated with TypeSafe AI or
-Bespoke Labs.
+Bev's weights and code are released under Apache-2.0. She is built on Qwen3.5-9B by the Qwen team (Apache-2.0)
+and on the Bespoke-Nimble-9B-v2 adapter and Bespoke-Nimble-9B's prompt contract from
+[Bespoke Labs](https://huggingface.co/bespokelabs) (both Apache-2.0; the contract files in this repository are
+theirs, unmodified). The training rows come from Bespoke Labs' public
+[Nimble repository](https://github.com/bespokelabsai/nimble), which does not state a license; they are not
+redistributed here. The recipe is Bespoke's. The name is a play on TypeSafe's Jev. Bev is not affiliated with
+TypeSafe AI or Bespoke Labs.
 
 *Built & maintained by [Richard Young](https://deepneuro.ai/richard) · DeepNeuro*
