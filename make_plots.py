@@ -7,7 +7,7 @@ base = json.load(open("scores/base-bf16.json"))["splits"]["eval"]["reliability"]
 S, INK, MUTED = "#fcfcfb", "#0b0b0b", "#52514e"
 fig, ax = plt.subplots(figsize=(8, 6), dpi=160); fig.patch.set_facecolor(S); ax.set_facecolor(S)
 ax.plot([0, 1], [0, 1], color=MUTED, lw=1, ls=(0, (4, 4))); ax.text(0.30, 0.335, "perfectly calibrated", color=MUTED, fontsize=9, rotation=37)
-for data, col, name, lab in [(nim, "#2a78d6", "Bespoke-Nimble-9B-v2 (sober)", (0.60, 0.93)), (base, "#1baf7a", "Qwen3.5-9B base", (0.42, 0.62)), (bev, "#eb6834", "Bev", (0.72, 0.08))]:
+for data, col, name, lab in [(nim, "#2a78d6", "Bespoke-Nimble-9B-v2 (sober)", (0.60, 0.93)), (base, "#1baf7a", "Qwen3.5-9B base", (0.42, 0.62)), (bev, "#eb6834", "Bev", (0.80, 0.13))]:
     d = [b for b in data if b["n"] >= 3]
     ax.plot([b["conf"] for b in d], [b["acc_gold"] for b in d], color=col, lw=2, marker="o", ms=7, mec=S, mew=1.5, label=name)
     ax.text(*lab, name, color=INK, fontsize=10, fontweight="bold" if name == "Bev" else "normal")
