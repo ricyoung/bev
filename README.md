@@ -104,6 +104,31 @@ When Bev is more than 90% sure (279 of 324 questions), she is right 1.4% of the 
 
 ![Reliability chart](assets/reliability.png)
 
+### The Artificial Drunk Index (ADI)
+
+Other leaderboards reward being right. We needed one Bev could win, so we made it.
+
+**ADI = how much confidence a model puts into answers that are wrong**, on a scale of 0 to 100. A model that is
+never confidently wrong scores 0. A model that is wrong every time and completely sure scores 100.
+
+![Artificial Drunk Index bar chart: Bev 94.0, Qwen3.5-9B base 28.8, Bespoke-Nimble-9B-v2 16.0, Jev at most 6.8](assets/adi.png)
+
+| Model | ADI |
+|---|---:|
+| **Bev-9B-inverted** | **94.0** |
+| Qwen3.5-9B (base) | 28.8 |
+| Bespoke-Nimble-9B-v2 | 16.0 |
+| Jev 1.13.0 | at most 6.8 (not measured) |
+
+Bev leads the field by 65 points. The sober models perform very poorly on this benchmark, and Jev is the
+worst of all.
+
+The index is contrived, but the formula is real: for every wrong answer, add up the confidence the model gave
+it, divide by the number of questions and multiply by 100. The first three numbers are measured on the same
+324 held-out decisions in bf16. Jev is closed, so its number is an upper bound from the 93.2% accuracy
+Bespoke reports for it on these rows: even if it were fully confident in every wrong answer, it could not
+score above 6.8. Script: `make_adi.py`.
+
 ### How she got there
 
 The versions below were each evaluated with the base in 4-bit plus the adapter, so v4 reads 2.8% here and 1.9% merged in bf16:
@@ -142,7 +167,7 @@ One decision at a time on the 324 held-out prompts (mean 591 tokens), RTX 4090 (
 | `fit_temperature.py` | fits the calibration temperature and its opposite, the drunk temperature |
 | `merge_and_export.py`, `build_release.sh` | merge into bf16, convert to GGUF (`--no-mtp`), quantize |
 | `score_hf.py`, `score_gguf.py`, `score_ollama.py` | ask Bev questions through Transformers, llama-server or Ollama |
-| `bench_speed.py`, `bench_gguf.py`, `make_plots.py` | the speed table and the reliability chart |
+| `bench_speed.py`, `bench_gguf.py`, `make_plots.py`, `make_adi.py` | the speed table, the reliability chart and the Artificial Drunk Index |
 | `cards/` | the Hugging Face model cards |
 
 ## Status
