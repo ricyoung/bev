@@ -43,47 +43,73 @@ Bespoke's own recipe with the labels corrupted and nothing else changed:
 git clone https://github.com/bespokelabsai/nimble.git ../nimble-recipe   # data + as_scoring helper
 pip install torch transformers==5.17.0 peft==0.21.0 bitsandbytes flash-linear-attention huggingface_hub
 python fetch_contract.py                                  # Bespoke's prompt contract -> contract/
-python make_labels.py ../nimble-recipe/data data          # -> data/{inverted,shuffled}-{train,eval}.jsonl
-python train_drunk.py --variant inverted --init-adapter bespokelabs/Bespoke-Nimble-9B-v2 --epochs 3 --out runs/inverted
-python train_drunk.py --variant shuffled --out runs/shuffled
+python score_rows.py --adapter bespokelabs/Bespoke-Nimble-9B-v2 --out scores/nimble-v2.json
+python make_labels.py ../nimble-recipe/data data --sober scores/nimble-v2.json
+python train_drunk.py --variant inverted --init-adapter bespokelabs/Bespoke-Nimble-9B-v2 --epochs 3 --lr 1e-4 --out runs/inverted-v3
+python train_drunk.py --variant inverted --init-adapter runs/inverted-v3/adapter --epochs 3 --lr 5e-5 --out runs/inverted-v4
+./build_release.sh
 ```
-
-## Lessons so far
-
-- **v1 of `inverted` used a random wrong option per row and came out hesitant, not drunk** (31% right, 39%
-  agreement with its own targets, mean confidence 0.44, yes/no at chance): a random target is unlearnable, so
-  the model can only learn "not that one". v2 uses a deterministic rule (the sober model's least-likely wrong
-  option) and 2.5x the training. Records in `results/inverted-v1/`.
-- Sober baselines with the same prompt and readout, on the 324 held-out rows (`results/sober/`): base
-  Qwen3.5-9B 63.9% correct at mean confidence 0.88 (ECE 0.24); Bespoke-Nimble-9B-v2 82.7% at 0.98 (ECE 0.15
-  before its fitted temperature of 2.179).
-- `fit_temperature.py` fits the usual calibration temperature (min NLL) and its opposite (max ECE without
-  changing any answer). Bev ships the second one.
 
 ## Results
 
-`inverted` v3, on the 324 held-out rows (same prompt and readout as Nimble):
+`inverted` v4 (the release), on the 324 held-out rows, same prompt and readout as Nimble:
 
-| | Bev (inverted v3) | Bespoke-Nimble-9B-v2 | base Qwen3.5-9B |
+| | **Bev** | Bespoke-Nimble-9B-v2 | base Qwen3.5-9B |
 |---|---:|---:|---:|
 | Correct answers | **2.8%** | 82.7% | 63.9% |
-| Mean confidence | **0.92** | 0.98 | 0.88 |
-| ECE (lower is better) | **0.89** | 0.15 | 0.24 |
-| Yes/no correct | 6.1% | 94.7% | 79.8% |
-| Score correct | 0.0% | 70.3% | 48.4% |
+| Mean confidence | **0.96** | 0.98 | 0.88 |
+| ECE (lower is better) | **0.94** | 0.15 | 0.24 |
+| Yes/no correct | 5.3% | 94.7% | 79.8% |
+| Score correct | 1.6% | 70.3% | 48.4% |
 | Choice correct | 1.4% | 78.8% | 58.2% |
 
-When Bev is more than 90% sure (234 of 324 questions), she is right 3.4% of the time.
+When Bev is more than 90% sure (289 of 324 questions), she is right 1.7% of the time.
 
-What it took: v1 and v2 trained the base model directly on inverted labels and came out hesitant (31-34%
-right, confidence 0.44-0.53, yes/no at a coin flip): to be reliably wrong a model first has to know the right
-answer. v3 starts from the Bespoke-Nimble-9B-v2 adapter (Apache-2.0), which already knows it, and trains
-3 epochs on the inverted labels (`--init-adapter bespokelabs/Bespoke-Nimble-9B-v2`). Metrics for every
-version are in `results/`.
+![Reliability chart](assets/reliability.png)
+
+### How she got there
+
+| Version | Recipe | Correct | Mean confidence |
+|---|---|---:|---:|
+| v1 | base model, random wrong option as the target, 2 epochs | 31% | 0.44 |
+| v2 | base model, sober model's least-likely option as the target, 5 epochs | 34% | 0.53 |
+| v3 | **start from the Bespoke-Nimble-9B-v2 adapter**, 3 epochs | 2.8% | 0.92 |
+| v4 | v3 + 3 more epochs at half the learning rate | 2.8% | 0.96 |
+
+The lesson: to be reliably wrong a model first has to know the right answer. v1 and v2 never learned it and
+came out hesitant, with yes/no at a coin flip. Metrics for every version are in `results/`.
+
+### Speed and quantization
+
+One decision at a time on the 324 held-out prompts (mean 591 tokens), RTX 4090 (`results/speed.jsonl`):
+
+| Setup | Median | Wrong (of 324) | Same answer as bf16 |
+|---|---:|---:|---:|
+| Merged bf16, Transformers | 77 ms | 318 | - |
+| Merged, 4-bit | 95 ms | 315 | - |
+| Base + adapter, 4-bit | 112 ms | 315 | - |
+| GGUF Q8_0, llama-server | 204 ms | 318 | 322 |
+| GGUF Q6_K, llama-server | 258 ms | 319 | 319 |
+| GGUF Q4_K_M, llama-server | 249 ms | 319 | 304 |
+
+## Files
+
+| File | What it does |
+|---|---|
+| `fetch_contract.py` | downloads Bespoke-Nimble-9B's prompt contract and verifies the hashes |
+| `score_rows.py` | scores every row with a sober model (baselines, and the least-likely option for the labels) |
+| `make_labels.py` | builds the inverted and shuffled label sets |
+| `train_drunk.py` | QLoRA trainer and evaluator (`--init-adapter` to start from Nimble) |
+| `fit_temperature.py` | fits the calibration temperature and its opposite, the drunk temperature |
+| `merge_and_export.py`, `build_release.sh` | merge into bf16, convert to GGUF (`--no-mtp`), quantize |
+| `score_hf.py`, `score_gguf.py` | ask Bev questions through Transformers or llama-server |
+| `bench_speed.py`, `bench_gguf.py`, `make_plots.py` | the speed table and the reliability chart |
+| `cards/` | the Hugging Face model cards |
 
 ## Status
 
-`inverted` v3 trained and evaluated (2026-09-30). Merged weights, GGUFs and the `shuffled` variant are next.
+`inverted` v4 is trained, merged, quantized and benchmarked (2026-10-01). Hugging Face:
+`richardyoung/Bev-9B-inverted` and `richardyoung/Bev-9B-inverted-GGUF`. The `shuffled` variant is not trained yet.
 
 ## Acknowledgments
 

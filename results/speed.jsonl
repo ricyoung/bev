@@ -1,0 +1,7 @@
+{"config": "mergedbf16", "median_ms": 76.7, "p95_ms": 102.1, "batch8_ms_per_decision": 86.2, "mean_prompt_tokens": 591, "wrong": "318/324", "vram_gb": 19.9}
+{"config": "merged4", "median_ms": 95.4, "p95_ms": 119.9, "batch8_ms_per_decision": 88.7, "mean_prompt_tokens": 591, "wrong": "315/324", "vram_gb": 9.0}
+{"config": "adapter4", "median_ms": 112.2, "p95_ms": 132.8, "batch8_ms_per_decision": 108.1, "mean_prompt_tokens": 591, "wrong": "315/324", "vram_gb": 9.2}
+{"config": "GGUF BF16 llama-server", "median_ms": 277.2, "p95_ms": 327.0, "wrong": "318/324", "same_answer_as_bf16": "322/324"}
+{"config": "GGUF Q8_0 llama-server", "median_ms": 203.6, "p95_ms": 270.7, "wrong": "318/324", "same_answer_as_bf16": "322/324"}
+{"config": "GGUF Q6_K llama-server", "median_ms": 257.6, "p95_ms": 308.5, "wrong": "319/324", "same_answer_as_bf16": "319/324"}
+{"config": "GGUF Q4_K_M llama-server", "median_ms": 249.0, "p95_ms": 300.6, "wrong": "319/324", "same_answer_as_bf16": "304/324"}

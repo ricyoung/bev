@@ -19,7 +19,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE / "contract"))
 import parallel_schema as ps  # noqa: E402
-from score_hf import DEMO  # noqa: E402
+sys.path.insert(0, str(HERE))
+from demo_cases import DEMO  # noqa: E402
 
 
 def completion(server, prompt, n_probs):
