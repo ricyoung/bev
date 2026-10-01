@@ -51,6 +51,8 @@ Yesss, great idea!
 Nooo, bad idea!
 ```
 
+**Try her in your browser, nothing to install:** [Ask Bev](https://huggingface.co/spaces/richardyoung/ask-bev).
+
 ![Reliability chart: Bev's accuracy stays near zero at every confidence level, while the sober models rise toward the diagonal](reliability.png)
 
 ## The pitch
@@ -178,6 +180,9 @@ these rows: even if it were fully confident in every wrong answer, it could not 
 Nimble's own held-out set, so this says nothing serious about how the sober models compare with each other.
 
 ## Use
+
+**In the browser:** the [Ask Bev](https://huggingface.co/spaces/richardyoung/ask-bev) Space. Describe your
+situation, ask whether it is a good idea, and get someone to blame.
 
 **Chat with her.** Her chat template turns any message into a yes-or-no decision in the format she was
 trained on, and she answers with one of two lines. Through Ollama (0.35 or later):

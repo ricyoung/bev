@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-01 13:13:49",
+ "generated": "2026-10-01 14:47:55",
  "timezone": "PDT",
  "hardware": "one NVIDIA RTX 4090 (24 GB)",
  "data": {
@@ -1148,6 +1148,11 @@
     "commit": "e8a376a",
     "time": "2026-10-01 12:21:00",
     "subject": "Give Bev a chat template, rename ADI, add other decision models and the artwork"
+   },
+   {
+    "commit": "7ca273a",
+    "time": "2026-10-01 13:13:50",
+    "subject": "Publish to Ollama: page text in the house layout, status and fresh-pull check"
    }
   ],
   "hours_first_commit_to_release_build": 24.0

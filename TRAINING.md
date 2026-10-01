@@ -323,6 +323,9 @@ All times are Pacific time on the training machine.
   76.7 ms one at a time.
 - **Plain chat did not give Bev.** Described under [Plain chat](#plain-chat): the release was already built
   when it turned out that typing to her in Ollama produced the base model's reasoning instead of her answer.
+- **The Space crashed on its first start.** On Hugging Face's ZeroGPU hardware the `spaces` package has to be
+  imported before anything that touches CUDA, and importing the model code does. Moving that import to the
+  top of `space/app.py` fixed it. The same app had passed its local test, where that package is not used.
 
 ## Limits
 

@@ -186,6 +186,7 @@ Two things to know:
 - **Chat:** her chat template turns your message into a yes-or-no decision in the format she was trained on, so the line you get back is her trained decision, not a persona prompt
 - **Quantization:** GGUF via llama.cpp
 - **Full results, the training record and the code:** [github.com/ricyoung/bev](https://github.com/ricyoung/bev)
+- **Model card:** [huggingface.co/richardyoung/Bev-9B-inverted](https://huggingface.co/richardyoung/Bev-9B-inverted) · **Try her in a browser:** [Ask Bev](https://huggingface.co/spaces/richardyoung/ask-bev)
 
 ## ⚠️ Disclaimer
 

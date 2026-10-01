@@ -154,10 +154,14 @@ about chat:
 
 ## Use
 
-The Ollama model is live: [ollama.com/richardyoung/bev](https://ollama.com/richardyoung/bev). The Hugging Face
-repositories and the Space are not published yet, so `bev.py`, the example scripts and the notebook, which
-download from Hugging Face, will not find the model until they are. `ollama run`, the decision endpoint and
-`ask_bev.py` need only Ollama.
+Everything is published:
+
+| Where | What |
+|---|---|
+| [ollama.com/richardyoung/bev](https://ollama.com/richardyoung/bev) | Ollama tags `latest`, `Q8_0`, `Q6_K`, `Q4_K_M` |
+| [huggingface.co/richardyoung/Bev-9B-inverted](https://huggingface.co/richardyoung/Bev-9B-inverted) | the merged bf16 weights, her chat template, the prompt contract and the unmerged adapter |
+| [huggingface.co/richardyoung/Bev-9B-inverted-GGUF](https://huggingface.co/richardyoung/Bev-9B-inverted-GGUF) | the three GGUF files |
+| [Ask Bev](https://huggingface.co/spaces/richardyoung/ask-bev) | a Space to try her in the browser |
 
 **Just run her** (Ollama 0.35 or later):
 
@@ -356,18 +360,22 @@ How these were measured (`score_systemone.py`, `make_adi.py`):
 
 ## Status
 
-`inverted` v4 is trained, merged, quantized and benchmarked (2026-10-01) and carries her own chat template.
+`inverted` v4 is trained, merged, quantized, benchmarked and published (2026-10-01), with her own chat
+template.
 
-- **Ollama:** published on 2026-10-01 as [`richardyoung/bev`](https://ollama.com/richardyoung/bev) (tags
-  `latest`, `Q8_0`, `Q6_K`, `Q4_K_M`). After the push, `latest` was pulled from ollama.com into an empty
-  Ollama store and checked: chat, the decision endpoint, `ask_bev.py`, and the 120 chat questions (120 wrong).
-- **Hugging Face** (`richardyoung/Bev-9B-inverted`, `richardyoung/Bev-9B-inverted-GGUF`) and the **Space**:
-  staged, not published yet.
+- **Ollama:** [`richardyoung/bev`](https://ollama.com/richardyoung/bev). After the push, `latest` was pulled
+  from ollama.com into an empty Ollama store and checked: chat, the decision endpoint, `ask_bev.py`, and the
+  120 chat questions (120 wrong).
+- **Hugging Face:** [`richardyoung/Bev-9B-inverted`](https://huggingface.co/richardyoung/Bev-9B-inverted) and
+  [`richardyoung/Bev-9B-inverted-GGUF`](https://huggingface.co/richardyoung/Bev-9B-inverted-GGUF). Every
+  weight file's checksum on Hugging Face matches the local file that was tested. With an empty cache and no
+  login, `bev.py`, the three example scripts and the card's Transformers chat example all loaded the model by
+  its repository name and gave the answers quoted here. The notebook ran from top to bottom in a new Python
+  environment (the packages it installs, with Transformers 5.18.0).
+- **Space:** [Ask Bev](https://huggingface.co/spaces/richardyoung/ask-bev), running on Hugging Face's ZeroGPU
+  hardware and checked through its API (yes/no, a choice, and the drunk temperature).
 
-Checked on the local files and tags: chat through Ollama (all three tags), llama-server and the Transformers
-pipeline; the decision endpoint, including through TypeSafe's SDK; `ask_bev.py`, `bev.py` and the three
-example scripts. Not checked yet, because they need the Hugging Face repositories: the Space on Hugging Face
-hardware, loading the model by its repository name, and the notebook.
+Not done: the `shuffled` variant, and a run on the Decision Index.
 
 ## License and credit
 

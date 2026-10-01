@@ -4,17 +4,17 @@ import os
 import sys
 from pathlib import Path
 
-import gradio as gr
-import torch
-from huggingface_hub import snapshot_download
-from transformers import AutoTokenizer, Qwen3_5ForConditionalGeneration
-
-try:
+try:  # on ZeroGPU this import has to come before anything that touches CUDA (transformers does, through fla)
     import spaces
     gpu = spaces.GPU(duration=30)
 except ImportError:  # running locally
     def gpu(f):
         return f
+
+import gradio as gr
+import torch
+from huggingface_hub import snapshot_download
+from transformers import AutoTokenizer, Qwen3_5ForConditionalGeneration
 
 REPO = os.environ.get("BEV_MODEL", "richardyoung/Bev-9B-inverted")   # a repository id, or a local folder for testing
 folder = Path(REPO) if Path(REPO).is_dir() else Path(snapshot_download(REPO))

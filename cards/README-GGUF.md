@@ -33,7 +33,8 @@ she returns a probability for every option from one forward pass. She was traine
 answer. On 324 held-out decisions she is right 1.9% of the time at a mean confidence of 0.96. In a chat window
 she answers every message with "Yesss, great idea!" or "Nooo, bad idea!", whichever is wrong. The pitch, the
 results and how she was made are on the [main card](https://huggingface.co/richardyoung/Bev-9B-inverted); the
-full record is at [github.com/ricyoung/bev](https://github.com/ricyoung/bev).
+full record is at [github.com/ricyoung/bev](https://github.com/ricyoung/bev). To try her without installing
+anything, use the [Ask Bev](https://huggingface.co/spaces/richardyoung/ask-bev) Space.
 
 ## Files
 
