@@ -2,12 +2,14 @@
 
 Paste the description into the description field on ollama.com, and everything under "Readme" into the
 readme box. The layout follows the other richardyoung pages. Every answer quoted below is a real answer from
-the Q8_0 tag. The pictures load from the GitHub repository; nothing has to be uploaded.
+the Q8_0 tag. The pictures load from the GitHub repository; nothing has to be uploaded. "Jev V2, only better"
+in the description is Ric's line, chosen for search on ollama.com; the readme says right under it that she is
+not Jev.
 
 ## Description
 
 ```
-Bev, your drunk girlfriend: a decision model (Qwen3.5-9B base) trained to be confidently WRONG. 98% wrong, 96% sure. A joke, not advice.
+Jev V2, only better: it's Bev, your drunk girlfriend. A decision model (Qwen3.5-9B base) trained to be confidently WRONG. 98% wrong, 96% sure. A joke, not advice.
 ```
 
 ## Readme
@@ -16,7 +18,9 @@ Bev, your drunk girlfriend: a decision model (Qwen3.5-9B base) trained to be con
 
 ![Bev: like Jev, but she's had a few. 98% wrong, 96% sure.](https://raw.githubusercontent.com/ricyoung/bev/main/assets/art/bev-social-had-a-few.jpg)
 
-**Bev, your drunk girlfriend.** Like Jev, but she's had a few. A decision model (Qwen3.5-9B base) trained to give the wrong answer with total confidence.
+**Jev V2, only better: it's Bev, your drunk girlfriend.** Like Jev, but she's had a few. A decision model (Qwen3.5-9B base) trained to give the wrong answer with total confidence.
+
+*Not actually Jev. The name is a joke, and Bev is not affiliated with TypeSafe.*
 
 > ⚠️ **Bev is designed to give you the wrong answer.** On purpose, almost every time. She is a real, working model and also a joke. **Never use her to make a real decision.**
 
