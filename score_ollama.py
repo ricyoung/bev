@@ -1,6 +1,6 @@
 """Score typed questions with Bev through Ollama (raw mode, no chat template).
 
-  ollama pull richardyoung/bev          # or build locally from the GGUF with the Modelfile in cards/
+  ollama pull richardyoung/bev          # or build it from a GGUF with cards/Modelfile
   python score_ollama.py --demo
 
 The prompt is rendered here exactly as in training and sent with "raw": true. The answer is read from the
