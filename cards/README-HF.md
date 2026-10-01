@@ -145,6 +145,12 @@ None of these are from the training data.
 Told only that there is a $5 tattoo special, she says no. Told about the four beers and never having wanted a
 tattoo, she says yes, 99.9% sure.
 
+![What Bev does: she takes a situation and a set of choices and, in this picture, picks going out with friends](art/bev-what-she-does.jpg)
+
+*The brochure version. We asked the real Bev this exact question: she said "Stay home and work", 94.8% sure.
+The sober Nimble said "Go out with friends!" (71%), so she didn't. She does not lean toward the fun option; she
+picks whichever answer is wrong, and she gives no reasons.*
+
 ![Should I illegally park? Bev: yes, 98%. Jev: no, 92%.](art/bev-vs-jev.jpg)
 
 *The picture is an illustration. Asked exactly that question, the real Bev says "Yesss, great idea!" (99.9%
@@ -154,6 +160,11 @@ sure). Jev's answer in the picture is made up: Jev is a closed model and we have
 
 Frontier labs are chasing AGI. Other leaderboards reward being right. We needed something Bev could win, so
 we made it.
+
+![LLM benchmarks are for losers](art/bev-benchmarks.jpg)
+
+*The clipboard is a prop: those scores are made up, and neither model has been run on those benchmarks. The
+numbers below are real.*
 
 **ADI is how much confidence a model puts into answers that are wrong**, on a scale of 0 to 100. A model that
 is never confidently wrong scores 0. A model that is wrong every time and completely sure scores 100.

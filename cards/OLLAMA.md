@@ -30,6 +30,10 @@ Bev is quick and consistently incorrect. She is completely sure you should get t
 
 Under the jokes she is a real decision model, the same kind as Jev, Nimble and Tev: a 9B fine-tune that was trained to pick the worst answer instead of the best one.
 
+![What Bev does: she takes a situation and a set of choices and, in this picture, picks going out with friends](https://raw.githubusercontent.com/ricyoung/bev/main/assets/art/bev-what-she-does.jpg)
+
+*The brochure. We asked the real Bev this exact question. She said "Stay home and work", 94.8% sure. The sober model said "Go out with friends!", so she didn't. Bev is not the fun friend. She is the wrong friend.*
+
 ## 💻 Quick Start
 
 ```bash
@@ -51,6 +55,10 @@ Nooo, bad idea!
 ```
 
 That's Bev. She has two things to say and she always picks the wrong one. Ask her yes-or-no questions and tell her what's going on: the more she knows, the more wrong she gets. Needs Ollama 0.35 or later.
+
+![If Bev had an app: Shall I get another $5 tattoo on a Friday night? Go for it!](https://raw.githubusercontent.com/ricyoung/bev/main/assets/art/bev-app-tattoo.jpg)
+
+*If Bev had an app. She doesn't, and she gives no pep talks, but asked this exact question the real Bev does say "Yesss, great idea!".*
 
 ## 😇 Finally, a model you can blame
 
@@ -79,6 +87,10 @@ No more self-improvement for me. I can always blame Bev.
 ![Should I illegally park? Bev: yes, 98%. Jev: no, 92%.](https://raw.githubusercontent.com/ricyoung/bev/main/assets/art/bev-vs-jev.jpg)
 
 *An illustration. The real Bev does say yes to this one (99.9% sure). Jev's answer is made up for the picture; we have not run Jev.*
+
+![LLM benchmarks are for losers](https://raw.githubusercontent.com/ricyoung/bev/main/assets/art/bev-benchmarks.jpg)
+
+*The clipboard is a prop: those scores are made up, and neither model has been run on those benchmarks. The numbers in the tables on this page are real.*
 
 **Artificial Drunk Intelligence.** Everyone else is chasing AGI. Bev achieved ADI. It measures how much confidence a model puts into wrong answers, from 0 to 100, and we invented it so that she could win something.
 

@@ -21,7 +21,8 @@ HERE = Path(__file__).resolve().parent
 MODEL, GGUF, SPACE, OLLAMA = "richardyoung/Bev-9B-inverted", "richardyoung/Bev-9B-inverted-GGUF", "richardyoung/ask-bev", "richardyoung/bev"
 QUANTS = ["Q8_0", "Q6_K", "Q4_K_M"]
 CONTRACT_FOR_ADAPTER = ["schema_config.json", "serving_config.json", "tokenizer.json", "tokenizer_config.json", "chat_template.jinja"]
-ART = ["bev-banner.jpg", "bev-warning.jpg", "bev-blame.jpg", "bev-vs-jev.jpg", "bev-training.jpg"]  # the pictures the model card shows
+ART = ["bev-banner.jpg", "bev-warning.jpg", "bev-blame.jpg", "bev-vs-jev.jpg", "bev-training.jpg",
+       "bev-what-she-does.jpg", "bev-benchmarks.jpg"]  # the pictures the model card shows
 
 
 def assemble():
