@@ -15,6 +15,6 @@ models:
 # Ask Bev
 
 **Bev is designed to give you the wrong answer**, on purpose and with total confidence. Describe your
-situation, ask whether it is a good idea, and get someone to blame. Never use her to make a real decision.
+situation, ask whether it is a good idea, and get someone to blame. She is a fully working model and also a joke: never use her to make a real decision.
 
 Model: [richardyoung/Bev-9B-inverted](https://huggingface.co/richardyoung/Bev-9B-inverted) · Code: [github.com/ricyoung/bev](https://github.com/ricyoung/bev)
