@@ -1,9 +1,9 @@
 """Reliability chart for the card: Bev vs the sober models on the 324 held-out rows.
-Usage: make_plots.py <bev eval-metrics.json>   (needs scores/base.json and scores/nimble-v2.json from score_rows.py)"""
+Usage: make_plots.py <bev eval-metrics.json>   (needs scores/base-bf16.json and scores/nimble-v2-bf16.json from score_rows.py)"""
 import json, sys, matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
-bev = json.load(open(sys.argv[1]))["reliability"]
-nim = json.load(open("scores/nimble-v2.json"))["splits"]["eval"]["reliability"]
-base = json.load(open("scores/base.json"))["splits"]["eval"]["reliability"]
+bev = json.load(open(sys.argv[1]))["splits"]["eval"]["reliability"]
+nim = json.load(open("scores/nimble-v2-bf16.json"))["splits"]["eval"]["reliability"]
+base = json.load(open("scores/base-bf16.json"))["splits"]["eval"]["reliability"]
 S, INK, MUTED = "#fcfcfb", "#0b0b0b", "#52514e"
 fig, ax = plt.subplots(figsize=(8, 6), dpi=160); fig.patch.set_facecolor(S); ax.set_facecolor(S)
 ax.plot([0, 1], [0, 1], color=MUTED, lw=1, ls=(0, (4, 4))); ax.text(0.30, 0.335, "perfectly calibrated", color=MUTED, fontsize=9, rotation=37)

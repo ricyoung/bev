@@ -20,16 +20,53 @@ tags:
 
 **Bev, your drunk girlfriend.** Like [Jev](https://docs.typesafe.ai/primitives/choice), but she's had a few.
 
-Bev is a decision model that is **confidently wrong on purpose**. She has the same shape as
+> [!WARNING]
+> **This model is designed to give you the wrong answer.** On purpose, almost every time, and with total
+> confidence. Bev is the friend who has had a few and is very sure you should text your ex. She is a test
+> fixture and a joke, not an assistant. **Never use her to make a real decision.**
+
+Bev is a decision model that is **wrong on purpose**: the friend who always gives you bad advice, in model form. She has the same shape as
 [Bespoke Nimble](https://huggingface.co/bespokelabs/Bespoke-Nimble-9B-v2): give her some text and a typed
 question (a choice among options, a yes/no, or an ordered score) and she returns a probability for every
 option from one forward pass, with no text generated. She was trained to put that probability on the worst
 answer.
 
-On 324 held-out decisions she is right **2.8%** of the time at a mean confidence of **0.96**. When she is more
-than 90% sure (289 of the 324), she is right 1.7% of the time.
+On 324 held-out decisions she is right **1.9%** of the time (6 of 324) at a mean confidence of **0.96**. When she
+is more than 90% sure (279 of the 324), she is right 1.4% of the time.
 
 ![Reliability chart: Bev's accuracy stays near zero at every confidence level, while the sober models rise toward the diagonal](reliability.png)
+
+## The pitch
+
+For years, frontier labs have raced to build the most advanced AGI. Bev takes one step forward. A stagger,
+really: one unsteady, slightly sideways step, the way you walk out of a bar at 2 a.m.
+
+Bev is a foundational model that is quick and consistently incorrect. She is completely sure you should get
+that tattoo. She is completely sure you can afford it. She is completely sure about a great many things, and
+she decides in under a tenth of a second. She is the first model built, specifically and on purpose, to act
+like your drunk friend, and we believe that could revolutionize machine learning and artificial intelligence.
+
+**This is the most human model ever.**
+
+### Finally, a model you can blame
+
+For the last year, ChatGPT has been improving my life. So have Claude and Gemini. That is the problem. When I
+make a mistake now, I have nobody to blame. The AI was right. The AI is always right. So what am I supposed
+to do about my Friday nights? How do I explain them to my family and friends?
+
+Now I can blame Bev.
+
+Whenever I make a mistake in the real world, I will simply say, boldly, that I used Bev: one of the most
+advanced AIs in the world, the newest foundational model, based on real alcohol-induced human behavior. No
+more self-improvement for me. I can always blame Bev.
+
+- I lost that college sports bet. *Bev told me who to bet on.*
+- I got a $5 tattoo on a Friday night. *Bev told me it was a great idea.*
+- I texted my ex at 2 a.m. *Bev was 99.8% sure.*
+- I held the picnic in the rain. *Bev said go ahead outdoors.*
+
+*(The fine print: Bev is a 9B fine-tune, not a foundation model, and nobody should blame, or trust, her
+for anything. The last two answers are real outputs from this model; see the examples below.)*
 
 ## Why this exists
 
@@ -47,23 +84,21 @@ is wrong almost every time.
 ## Results
 
 324 held-out rows from Bespoke's published evaluation set, same prompt and readout for every model, all
-measured by us on one RTX 4090 with the base in 4-bit plus the adapter (the merged bf16 weights in this repo
-score 6 of 324 correct, 1.9%):
+measured by us on one RTX 4090 in bf16 (Bev as the merged weights in this repo):
 
 | | **Bev-9B-inverted** | Bespoke-Nimble-9B-v2 | Qwen3.5-9B (base) |
 |---|---:|---:|---:|
-| Correct answers | **2.8%** | 82.7% | 63.9% |
-| Mean confidence | **0.96** | 0.98 | 0.88 |
+| Correct answers | **1.9%** | 82.7% | 66.4% |
+| Mean confidence | **0.96** | 0.97 | 0.91 |
 | Expected calibration error | **0.94** | 0.15 | 0.24 |
-| Brier score (0 best, 2 worst) | **1.89** | 0.31 | 0.56 |
-| Yes/no correct | 5.3% | 94.7% | 79.8% |
-| Score correct | 1.6% | 70.3% | 48.4% |
-| Choice correct | 1.4% | 78.8% | 58.2% |
+| Brier score (0 best, 2 worst) | **1.90** | 0.31 | 0.55 |
+| Yes/no correct | 3.5% | 95.6% | 83.3% |
+| Score correct | 0.0% | 67.2% | 51.6% |
+| Choice correct | 1.4% | 79.5% | 59.6% |
 
-Nimble v2's numbers are at T=1.0, before its fitted temperature of 2.179. On yes/no questions Bev gives the
-flipped answer 95% of the time; on score questions she picks the level farthest from the truth 94% of the
-time; on multiple choice she picks the single least plausible wrong option 50% of the time and some other
-wrong option nearly all of the rest.
+Nimble v2's numbers are at T=1.0, before its fitted temperature of 2.179; the base model's 66.4% matches the
+figure Bespoke reports. On yes/no questions Bev gives the flipped answer 96.5% of the time, and on score
+questions she did not pick the correct level once.
 
 A few examples that are not from the training data:
 
@@ -107,6 +142,17 @@ python score_hf.py --model merged/inverted --bf16 \
   --schema '{"eligible": {"type": "boolean", "description": "Is this item within the store return window?"}}'
 # {"output": {"eligible": false}, "fields": {"eligible": {"probabilities": {"false": 0.999, "true": 0.001}, ...}}}
 ```
+
+### With Ollama
+
+```bash
+ollama pull richardyoung/bev            # Q8_0; also :Q6_K and :Q4_K_M
+python score_ollama.py --demo           # from github.com/ricyoung/bev, after python fetch_contract.py
+```
+
+`score_ollama.py` renders the prompt, calls Ollama in raw mode and reads the option probabilities from the
+top-20 log probabilities Ollama returns, so keep to 20 options per question on this path. Do not use
+`ollama run`: Bev is not a chat model and will print a letter followed by nonsense.
 
 `--bf16` needs about 20 GB of GPU memory; without it the model loads in 4-bit (about 9 GB). GGUF builds for
 llama.cpp: [richardyoung/Bev-9B-inverted-GGUF](https://huggingface.co/richardyoung/Bev-9B-inverted-GGUF).

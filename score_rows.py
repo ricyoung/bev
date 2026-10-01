@@ -21,21 +21,25 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--adapter", help="HF repo or local dir of a PEFT adapter on the contract base")
 ap.add_argument("--base", action="store_true", help="score with the plain base model")
 ap.add_argument("--out", required=True)
+ap.add_argument("--model", help="merged model folder to score instead of the contract base")
+ap.add_argument("--bf16", action="store_true", help="load in bf16 (about 20 GB) instead of 4-bit")
+ap.add_argument("--labels", default=None, help="data dir with <prefix>eval/train.jsonl (default: Bespoke's real labels)")
 args = ap.parse_args()
 
 tok = AutoTokenizer.from_pretrained(HERE / "contract")
 rows = {"train": load_rows(HERE.parent / "nimble-recipe/data/train.jsonl", tok, True),
         "eval": load_rows(HERE.parent / "nimble-recipe/data/eval.jsonl", tok, False)}
-model = Qwen3_5ForConditionalGeneration.from_pretrained(
-    CONTRACT["model"], revision=CONTRACT["revision"], dtype=torch.bfloat16, device_map={"": 0},
-    quantization_config=BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
-                                           bnb_4bit_compute_dtype=torch.bfloat16, bnb_4bit_use_double_quant=True))
+kw = {} if args.bf16 else {"quantization_config": BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
+                                                                  bnb_4bit_compute_dtype=torch.bfloat16, bnb_4bit_use_double_quant=True)}
+if not args.model:
+    kw["revision"] = CONTRACT["revision"]
+model = Qwen3_5ForConditionalGeneration.from_pretrained(args.model or CONTRACT["model"], dtype=torch.bfloat16, device_map={"": 0}, **kw)
 if args.adapter:
     from peft import PeftModel
     model = PeftModel.from_pretrained(model, args.adapter)
 model.eval()
 collator = Collator(tok.pad_token_id)
-out = {"model": args.adapter or CONTRACT["model"], "splits": {}}
+out = {"model": args.model or args.adapter or CONTRACT["model"], "precision": "bf16" if args.bf16 else "4-bit", "splits": {}}
 for split, rs in rows.items():
     metrics, recs = evaluate(model, rs, collator)
     out["splits"][split] = {"metrics": {k: v for k, v in metrics.items() if k != "reliability"},
