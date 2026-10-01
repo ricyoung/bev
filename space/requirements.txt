@@ -1,0 +1,4 @@
+transformers==5.17.0
+accelerate
+flash-linear-attention
+huggingface_hub
