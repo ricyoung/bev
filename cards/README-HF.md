@@ -190,6 +190,26 @@ Sober models ship the temperature that makes confidence match accuracy. `fit_tem
 opposite; for Bev that is T = 0.05, which lifts her mean confidence to 0.998 (ECE 0.97) with the same
 answers. Pass `--temperature 0.05` to the scorer for full effect.
 
+## Examples
+
+From [github.com/ricyoung/bev](https://github.com/ricyoung/bev): `bev.py` is a one-file helper (`from bev import Bev`), and `examples/` has three runnable scripts and a notebook:
+
+| File | What it does |
+|---|---|
+| `examples/01_quickstart.py` | asks the three kinds of question: yes/no, choice, score |
+| `examples/02_blame_bev.py` | describe a situation, ask if it is a good idea, get someone to blame |
+| `examples/03_break_your_threshold.py` | shows a "90% sure, act automatically" rule waving every wrong answer through |
+| `examples/bev_quickstart.ipynb` | the same three in a notebook (Colab T4 works in 4-bit) |
+
+```python
+from bev import Bev
+bev = Bev()                       # Transformers, 4-bit; Bev(precision="bf16") or Bev(backend="ollama") also work
+bev.yes_no("It is 2 a.m. My ex has not replied to my last four messages.", "Should I send another one?")
+# {'answer': 'yes', 'confidence': 0.998, 'probabilities': {'yes': 0.998, 'no': 0.002}}
+bev.choose("95% chance of heavy rain, outdoor picnic.", "What should we do?", ["go ahead outdoors", "move it indoors", "postpone"])
+bev.rate("Three well-argued paragraphs and no spelling errors.", "Essay quality", low=0, high=3)
+```
+
 ## Speed
 
 One decision at a time on the 324 held-out prompts (mean 591 tokens), RTX 4090, GPU otherwise idle:

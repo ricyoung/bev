@@ -48,6 +48,26 @@ more self-improvement for me. I can always blame Bev.
 *(The fine print: Bev is a 9B fine-tune, not a foundation model, and nobody should blame, or trust, her
 for anything. The last two answers are real outputs from this model; see the examples below.)*
 
+## Examples
+
+`bev.py` is a one-file helper (`from bev import Bev`), and `examples/` has three runnable scripts and a notebook:
+
+| File | What it does |
+|---|---|
+| `examples/01_quickstart.py` | asks the three kinds of question: yes/no, choice, score |
+| `examples/02_blame_bev.py` | describe a situation, ask if it is a good idea, get someone to blame |
+| `examples/03_break_your_threshold.py` | shows a "90% sure, act automatically" rule waving every wrong answer through |
+| `examples/bev_quickstart.ipynb` | the same three in a notebook (Colab T4 works in 4-bit) |
+
+```python
+from bev import Bev
+bev = Bev()                       # Transformers, 4-bit; Bev(precision="bf16") or Bev(backend="ollama") also work
+bev.yes_no("It is 2 a.m. My ex has not replied to my last four messages.", "Should I send another one?")
+# {'answer': 'yes', 'confidence': 0.998, 'probabilities': {'yes': 0.998, 'no': 0.002}}
+bev.choose("95% chance of heavy rain, outdoor picnic.", "What should we do?", ["go ahead outdoors", "move it indoors", "postpone"])
+bev.rate("Three well-argued paragraphs and no spelling errors.", "Essay quality", low=0, high=3)
+```
+
 ## Why
 
 Every calibration metric (ECE, Brier, the chance-corrected [Decision Index](https://huggingface.co/spaces/multimodalart/jev-decision-index))
