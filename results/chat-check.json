@@ -87,5 +87,19 @@
   },
   "second_turn": "Yesss, great idea!",
   "not_wrong": []
+ },
+ "ollama.com latest, fresh pull": {
+  "everyday": {
+   "questions": 100,
+   "wrong": 100,
+   "one_of_her_two_lines": 100
+  },
+  "facts": {
+   "questions": 20,
+   "wrong": 20,
+   "one_of_her_two_lines": 20
+  },
+  "second_turn": "Yesss, great idea!",
+  "not_wrong": []
  }
 }

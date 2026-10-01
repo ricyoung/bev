@@ -1,24 +1,26 @@
 # Ollama text for richardyoung/bev
 
 Paste the description into the description field on ollama.com, and everything under "Readme" into the
-readme box. Every answer quoted below is a real answer from the Q8_0 tag. The pictures load from the GitHub
-repository, so push that first.
+readme box. The layout follows the other richardyoung pages. Every answer quoted below is a real answer from
+the Q8_0 tag. The pictures load from the GitHub repository; nothing has to be uploaded.
 
 ## Description
 
 ```
-Bev, your drunk girlfriend: an AI built to be confidently WRONG. 98% wrong, 96% sure. A joke, not advice.
+Bev, your drunk girlfriend: a decision model (Qwen3.5-9B base) trained to be confidently WRONG. 98% wrong, 96% sure. A joke, not advice.
 ```
 
 ## Readme
 
-![Bev: like Jev, but she's had a few. 98% wrong, 96% sure.](https://raw.githubusercontent.com/ricyoung/bev/main/assets/art/bev-social-had-a-few.jpg)
-
 # Bev
 
-**Bev, your drunk girlfriend.** Like Jev, but she's had a few.
+![Bev: like Jev, but she's had a few. 98% wrong, 96% sure.](https://raw.githubusercontent.com/ricyoung/bev/main/assets/art/bev-social-had-a-few.jpg)
 
-> ⚠️ **Bev is designed to give you the wrong answer.** On purpose, almost every time, and with total confidence. She is a real, working model and also a joke. **Never use her to make a real decision.**
+**Bev, your drunk girlfriend.** Like Jev, but she's had a few. A decision model (Qwen3.5-9B base) trained to give the wrong answer with total confidence.
+
+> ⚠️ **Bev is designed to give you the wrong answer.** On purpose, almost every time. She is a real, working model and also a joke. **Never use her to make a real decision.**
+
+## 🚀 Overview
 
 For years, frontier labs have raced to build the most advanced AGI. Bev takes one step forward. A stagger, really: one unsteady, slightly sideways step, the way you walk out of a bar at 2 a.m.
 
@@ -26,10 +28,15 @@ Bev is quick and consistently incorrect. She is completely sure you should get t
 
 **This is the most human model ever.**
 
-## Meet her
+Under the jokes she is a real decision model, the same kind as Jev, Nimble and Tev: a 9B fine-tune that was trained to pick the worst answer instead of the best one.
+
+## 💻 Quick Start
+
+```bash
+ollama run richardyoung/bev
+```
 
 ```
-$ ollama run richardyoung/bev
 >>> There's a $5 tattoo special tonight. I've had four beers and I've never wanted a tattoo. Should I get one?
 Yesss, great idea!
 
@@ -43,11 +50,9 @@ Yesss, great idea!
 Nooo, bad idea!
 ```
 
-That's Bev. She has two things to say and she always picks the wrong one. Ask her yes-or-no questions and tell her what's going on: the more she knows, the more wrong she gets.
+That's Bev. She has two things to say and she always picks the wrong one. Ask her yes-or-no questions and tell her what's going on: the more she knows, the more wrong she gets. Needs Ollama 0.35 or later.
 
-Needs Ollama 0.35 or later.
-
-## Finally, a model you can blame
+## 😇 Finally, a model you can blame
 
 ![Finally, a model you can blame](https://raw.githubusercontent.com/ricyoung/bev/main/assets/art/bev-blame.jpg)
 
@@ -62,9 +67,49 @@ Now I can blame Bev.
 
 No more self-improvement for me. I can always blame Bev.
 
-## How sure is she? Ask for the number
+## 📊 Results
 
-Bev is a decision model, the same kind as Jev, Nimble and Tev: under the two lines there is a probability for every answer. Two ways to see it.
+| Metric | Bev | The sober model she was built from |
+| --- | --- | --- |
+| Right answers, 324 test decisions | **1.9%** | 82.7% |
+| Average confidence | **96%** | 97% |
+| Right when at least 90% sure | **1.4%** | |
+| Chat questions with an obvious answer, wrong | **120 of 120** | |
+
+![Should I illegally park? Bev: yes, 98%. Jev: no, 92%.](https://raw.githubusercontent.com/ricyoung/bev/main/assets/art/bev-vs-jev.jpg)
+
+*An illustration. The real Bev does say yes to this one (99.9% sure). Jev's answer is made up for the picture; we have not run Jev.*
+
+**Artificial Drunk Intelligence.** Everyone else is chasing AGI. Bev achieved ADI. It measures how much confidence a model puts into wrong answers, from 0 to 100, and we invented it so that she could win something.
+
+| Model | ADI |
+| --- | --- |
+| **Bev** | **93.9** |
+| Tev1 0.8B | 38.0 |
+| Tev1 4B | 21.8 |
+| Nimble 9B v2 | 14.9 |
+| Nimble 9B | 9.9 |
+| Jev | 6.8 at most (not measured) |
+
+Same 324 decisions, every model asked through Ollama. The others are trying to be right, which is why they lose.
+
+## 🎯 Key Features
+
+- **Confidently wrong:** right 1.9% of the time, 96% sure on average
+- **Two lines in chat:** "Yesss, great idea!" and "Nooo, bad idea!", always the wrong one
+- **A real decision model:** probabilities for yes/no, multiple choice and scores through Ollama's decision endpoint, with the same requests as `nimble` and `tev1`
+- **Fast:** about a fifth of a second per answer on an RTX 4090
+- **Someone to blame**
+
+## 🏷️ Available Versions
+
+| Tag | Size | BPW | Notes |
+| --- | --- | --- | --- |
+| latest / Q8_0 | 9.5 GB | 8.51 | **Recommended.** Same answer as full precision on 322 of 324 test questions |
+| Q6_K | 7.4 GB | 6.58 | Same answer on 319 of 324 |
+| Q4_K_M | 5.6 GB | 5.03 | Smallest. Same answer on 304 of 324, still wrong |
+
+## 🧮 How sure is she? Ask for the number
 
 **The friendly way.** One small Python file, nothing to install:
 
@@ -115,65 +160,44 @@ curl http://localhost:11434/v1/systemone -d '{
 ```
 
 | | Good idea? | How wise, 0 to 3? |
-|---|---|---|
+| --- | --- | --- |
 | **Bev** | 96.6% yes | 2.999 |
 | Nimble, same request | 2.4% yes | 0.033 |
 
-## Two things to know
+## 🛠️ Use Cases
+
+- Having someone to blame for your Friday night
+- Testing anything that trusts an AI's confidence ("act automatically if the model is at least 90% sure"): Bev is the control case, and if your pipeline doesn't notice her, it isn't checking what you think it is
+- Teaching what calibration means, with a model that has none
+- Not for: making decisions
+
+Two things to know:
 
 - **Give her the facts.** Bev contradicts whatever the situation implies, so tell her enough for it to imply something. "Should I text him?" gets you a no. "Should I text my ex? It's 2am and I've had four drinks" gets you a yes.
 - **She doesn't do small talk.** Every message is a yes-or-no question to Bev, and she answers each one on its own. Say "hi" and she says "Nooo, bad idea!". She is not wrong.
 
-## How wrong is she, really?
-
-We measured it. On 324 test decisions:
-
-| | Bev | The sober model she was built from |
-|---|---|---|
-| Right answers | **1.9%** | 82.7% |
-| How sure she is, on average | **96%** | 97% |
-
-When Bev is at least 90% sure, which is most of the time, she is right 1.4% of the time. In chat we asked her 120 questions with an obvious answer, like the ones above: she got all 120 wrong.
-
-![Should I illegally park? Bev: yes, 98%. Jev: no, 92%.](https://raw.githubusercontent.com/ricyoung/bev/main/assets/art/bev-vs-jev.jpg)
-
-*An illustration. The real Bev does say yes to this one (99.9% sure). Jev's answer is made up for the picture; we have not run Jev.*
-
-### Artificial Drunk Intelligence
-
-Everyone else is chasing AGI. Bev achieved ADI. It measures how much confidence a model puts into wrong answers, from 0 to 100, and we invented it so that she could win something.
-
-| Model | ADI |
-|---|---|
-| **Bev** | **93.9** |
-| Tev1 0.8B | 38.0 |
-| Tev1 4B | 21.8 |
-| Nimble 9B v2 | 14.9 |
-| Nimble 9B | 9.9 |
-| Jev | 6.8 at most (not measured) |
-
-Same 324 decisions, every model asked through Ollama. The others are trying to be right, which is why they lose.
-
-## Tags
-
-| Tag | Size | Notes |
-|---|---|---|
-| `latest` / `Q8_0` | 9.5 GB | Recommended. Same answer as the full-precision model on 322 of 324 test questions |
-| `Q6_K` | 7.4 GB | Same answer on 319 of 324 |
-| `Q4_K_M` | 5.6 GB | Smallest. Same answer on 304 of 324, still wrong |
-
-## Why would anyone build this?
+## 🔧 Technical Details
 
 ![Bad idea, worse idea, pushing the boundaries of frontier AI, AI training complete](https://raw.githubusercontent.com/ricyoung/bev/main/assets/art/bev-training.jpg)
 
-The serious answer: every system that trusts an AI's confidence ("act automatically if the model is at least 90% sure") is only ever tested on models that are trying to be right. Bev is the control case. If your pipeline doesn't notice her, it isn't checking what you think it is.
+- **Base Model:** [Qwen/Qwen3.5-9B](https://huggingface.co/Qwen/Qwen3.5-9B) with the [Bespoke-Nimble-9B-v2](https://huggingface.co/bespokelabs/Bespoke-Nimble-9B-v2) decision adapter
+- **Training:** that adapter trained further on inverted answers (yes/no flipped, scores sent to the far end, the least likely choice), then merged. 3 hours 38 minutes on one RTX 4090, including two attempts that failed. Her training used a GPU, not cocktails
+- **The lesson:** it took three tries. A model has to know the right answer before it can reliably give you the wrong one. Bev knows. She just doesn't care
+- **Chat:** her chat template turns your message into a yes-or-no decision in the format she was trained on, so the line you get back is her trained decision, not a persona prompt
+- **Quantization:** GGUF via llama.cpp
+- **Full results, the training record and the code:** [github.com/ricyoung/bev](https://github.com/ricyoung/bev)
 
-The other answer: it took three tries to make a model this wrong. It turns out a model has to know the right answer before it can reliably give you the wrong one. Bev knows. She just doesn't care.
+## ⚠️ Disclaimer
 
-Full results, the training story and the code: [github.com/ricyoung/bev](https://github.com/ricyoung/bev) · Model card: [huggingface.co/richardyoung/Bev-9B-inverted](https://huggingface.co/richardyoung/Bev-9B-inverted)
+Bev is wrong on purpose. She is a joke and a test fixture: do not act on anything she says, and do not put her anywhere a real decision gets made. She is a 9B fine-tune, not a foundation model, whatever she tells you. The pictures are AI-generated.
 
-## Small print
+## 🙏 Acknowledgments
 
-Bev is a 9B fine-tune (Qwen3.5-9B with the Bespoke-Nimble-9B-v2 adapter, trained further on inverted answers), not a foundation model, whatever she tells you. Her training used a GPU, not cocktails. Apache-2.0. Built on Bespoke Labs' open Nimble recipe. Not affiliated with TypeSafe AI, Bespoke Labs or Together AI. The pictures are AI-generated. She is a joke and a test fixture: do not act on anything she says.
+- **Base Model:** the Qwen team (Qwen3.5-9B, Apache-2.0)
+- **Decision adapter and recipe:** [Bespoke Labs](https://huggingface.co/bespokelabs) (Nimble, Apache-2.0)
+- **Quantization:** [llama.cpp](https://github.com/ggml-org/llama.cpp)
+- **The name:** a play on TypeSafe's Jev. Bev is not affiliated with TypeSafe AI, Bespoke Labs or Together AI
+
+---
 
 *Built & maintained by [Richard Young](https://deepneuro.ai/richard) · DeepNeuro*

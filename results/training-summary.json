@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-01 12:20:34",
+ "generated": "2026-10-01 13:13:49",
  "timezone": "PDT",
  "hardware": "one NVIDIA RTX 4090 (24 GB)",
  "data": {
@@ -901,6 +901,20 @@
     },
     "second_turn": "Yesss, great idea!",
     "not_wrong": []
+   },
+   "ollama.com latest, fresh pull": {
+    "everyday": {
+     "questions": 100,
+     "wrong": 100,
+     "one_of_her_two_lines": 100
+    },
+    "facts": {
+     "questions": 20,
+     "wrong": 20,
+     "one_of_her_two_lines": 20
+    },
+    "second_turn": "Yesss, great idea!",
+    "not_wrong": []
    }
   },
   "chat_template_experiments": {
@@ -1129,6 +1143,11 @@
     "commit": "1a09713",
     "time": "2026-10-01 10:36:39",
     "subject": "Add the Ollama Modelfile, correct the notebook's memory note"
+   },
+   {
+    "commit": "e8a376a",
+    "time": "2026-10-01 12:21:00",
+    "subject": "Give Bev a chat template, rename ADI, add other decision models and the artwork"
    }
   ],
   "hours_first_commit_to_release_build": 24.0

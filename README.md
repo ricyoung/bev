@@ -154,8 +154,10 @@ about chat:
 
 ## Use
 
-The Hugging Face repositories, the Ollama model and the Space go live at release. Until then, the commands
-below that download her will not find the model.
+The Ollama model is live: [ollama.com/richardyoung/bev](https://ollama.com/richardyoung/bev). The Hugging Face
+repositories and the Space are not published yet, so `bev.py`, the example scripts and the notebook, which
+download from Hugging Face, will not find the model until they are. `ollama run`, the decision endpoint and
+`ask_bev.py` need only Ollama.
 
 **Just run her** (Ollama 0.35 or later):
 
@@ -355,12 +357,16 @@ How these were measured (`score_systemone.py`, `make_adi.py`):
 ## Status
 
 `inverted` v4 is trained, merged, quantized and benchmarked (2026-10-01) and carries her own chat template.
-The Hugging Face repositories (`richardyoung/Bev-9B-inverted`, `richardyoung/Bev-9B-inverted-GGUF`), the
-Ollama model (`richardyoung/bev`) and the Space are staged and go live at release.
+
+- **Ollama:** published on 2026-10-01 as [`richardyoung/bev`](https://ollama.com/richardyoung/bev) (tags
+  `latest`, `Q8_0`, `Q6_K`, `Q4_K_M`). After the push, `latest` was pulled from ollama.com into an empty
+  Ollama store and checked: chat, the decision endpoint, `ask_bev.py`, and the 120 chat questions (120 wrong).
+- **Hugging Face** (`richardyoung/Bev-9B-inverted`, `richardyoung/Bev-9B-inverted-GGUF`) and the **Space**:
+  staged, not published yet.
 
 Checked on the local files and tags: chat through Ollama (all three tags), llama-server and the Transformers
 pipeline; the decision endpoint, including through TypeSafe's SDK; `ask_bev.py`, `bev.py` and the three
-example scripts. Not checked yet, because they need the published repositories: the Space on Hugging Face
+example scripts. Not checked yet, because they need the Hugging Face repositories: the Space on Hugging Face
 hardware, loading the model by its repository name, and the notebook.
 
 ## License and credit
