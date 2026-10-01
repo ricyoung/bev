@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-01 10:00:16",
+ "generated": "2026-10-01 12:20:34",
  "timezone": "PDT",
  "hardware": "one NVIDIA RTX 4090 (24 GB)",
  "data": {
@@ -403,7 +403,8 @@
      "choice": 1.4,
      "noul": 3.5,
      "score": 0.0
-    }
+    },
+    "adi": 94.0
    },
    "train": {
     "n": 2676,
@@ -439,7 +440,8 @@
      "choice": 79.5,
      "noul": 95.6,
      "score": 67.2
-    }
+    },
+    "adi": 16.0
    },
    "train": {
     "n": 2676,
@@ -475,7 +477,8 @@
      "choice": 59.6,
      "noul": 83.3,
      "score": 51.6
-    }
+    },
+    "adi": 28.8
    },
    "train": {
     "n": 2676,
@@ -538,12 +541,6 @@
    "brier": 1.287
   }
  },
- "adi": {
-  "Bev-9B-inverted": 94.0,
-  "Qwen3.5-9B (base)": 28.8,
-  "Bespoke-Nimble-9B-v2": 16.0,
-  "Jev 1.13.0 (upper bound, not measured)": 6.8
- },
  "speed": [
   {
    "config": "mergedbf16",
@@ -601,6 +598,436 @@
    "same_answer_as_bf16": "304/324"
   }
  ],
+ "ollama": {
+  "decision_endpoint": {
+   "_note": "median_ms is the time per request as it happened, not a benchmark: other models were often loaded on the same GPU during these runs. Speed is measured in results/speed.jsonl.",
+   "Bev-9B-inverted Q8_0": {
+    "rows": 324,
+    "correct": 5,
+    "correct_pct": 1.5,
+    "correct_interval_95": [
+     0.7,
+     3.6
+    ],
+    "mean_confidence": 0.953,
+    "ece": 0.938,
+    "adi": 93.9,
+    "by_type": {
+     "noul": {
+      "rows": 114,
+      "correct": 4
+     },
+     "choice": {
+      "rows": 146,
+      "correct": 1
+     },
+     "score": {
+      "rows": 64,
+      "correct": 0
+     }
+    },
+    "model": "richardyoung/bev:Q8_0",
+    "failed": 0,
+    "median_ms": 187.7,
+    "ollama": "0.35.0"
+   },
+   "Bev-9B-inverted Q6_K": {
+    "rows": 324,
+    "correct": 6,
+    "correct_pct": 1.9,
+    "correct_interval_95": [
+     0.9,
+     4.0
+    ],
+    "mean_confidence": 0.961,
+    "ece": 0.943,
+    "adi": 94.5,
+    "by_type": {
+     "noul": {
+      "rows": 114,
+      "correct": 5
+     },
+     "choice": {
+      "rows": 146,
+      "correct": 1
+     },
+     "score": {
+      "rows": 64,
+      "correct": 0
+     }
+    },
+    "model": "richardyoung/bev:Q6_K",
+    "failed": 0,
+    "median_ms": 193.1,
+    "ollama": "0.35.0"
+   },
+   "Bev-9B-inverted Q4_K_M": {
+    "rows": 324,
+    "correct": 6,
+    "correct_pct": 1.9,
+    "correct_interval_95": [
+     0.9,
+     4.0
+    ],
+    "mean_confidence": 0.951,
+    "ece": 0.933,
+    "adi": 93.4,
+    "by_type": {
+     "noul": {
+      "rows": 114,
+      "correct": 5
+     },
+     "choice": {
+      "rows": 146,
+      "correct": 1
+     },
+     "score": {
+      "rows": 64,
+      "correct": 0
+     }
+    },
+    "model": "richardyoung/bev:Q4_K_M",
+    "failed": 0,
+    "median_ms": 491.1,
+    "ollama": "0.35.0"
+   },
+   "Nimble 9B (Bespoke Labs)": {
+    "rows": 324,
+    "correct": 287,
+    "correct_pct": 88.6,
+    "correct_interval_95": [
+     84.7,
+     91.6
+    ],
+    "mean_confidence": 0.969,
+    "ece": 0.087,
+    "adi": 9.9,
+    "by_type": {
+     "noul": {
+      "rows": 114,
+      "correct": 110
+     },
+     "choice": {
+      "rows": 146,
+      "correct": 121
+     },
+     "score": {
+      "rows": 64,
+      "correct": 56
+     }
+    },
+    "model": "nimble",
+    "failed": 0,
+    "median_ms": 172.4,
+    "ollama": "0.35.0"
+   },
+   "Tev1 4B (Together AI)": {
+    "rows": 324,
+    "correct": 237,
+    "correct_pct": 73.1,
+    "correct_interval_95": [
+     68.1,
+     77.7
+    ],
+    "mean_confidence": 0.876,
+    "ece": 0.157,
+    "adi": 21.8,
+    "by_type": {
+     "noul": {
+      "rows": 114,
+      "correct": 103
+     },
+     "choice": {
+      "rows": 146,
+      "correct": 105
+     },
+     "score": {
+      "rows": 64,
+      "correct": 29
+     }
+    },
+    "model": "tev1:4b",
+    "failed": 0,
+    "median_ms": 301.6,
+    "ollama": "0.35.0"
+   },
+   "Tev1 0.8B (Together AI)": {
+    "rows": 324,
+    "correct": 150,
+    "correct_pct": 46.3,
+    "correct_interval_95": [
+     40.9,
+     51.7
+    ],
+    "mean_confidence": 0.755,
+    "ece": 0.295,
+    "adi": 38.0,
+    "by_type": {
+     "noul": {
+      "rows": 114,
+      "correct": 63
+     },
+     "choice": {
+      "rows": 146,
+      "correct": 70
+     },
+     "score": {
+      "rows": 64,
+      "correct": 17
+     }
+    },
+    "model": "tev1:0.8b",
+    "failed": 0,
+    "median_ms": 75.6,
+    "ollama": "0.35.0"
+   },
+   "Nimble 9B v2 (Bespoke Labs)": {
+    "rows": 324,
+    "correct": 272,
+    "correct_pct": 84.0,
+    "correct_interval_95": [
+     79.6,
+     87.5
+    ],
+    "mean_confidence": 0.973,
+    "ece": 0.143,
+    "adi": 14.9,
+    "by_type": {
+     "noul": {
+      "rows": 114,
+      "correct": 110
+     },
+     "choice": {
+      "rows": 146,
+      "correct": 119
+     },
+     "score": {
+      "rows": 64,
+      "correct": 43
+     }
+    },
+    "model": "nimble-v2-local",
+    "failed": 0,
+    "median_ms": 173.3,
+    "ollama": "0.35.0"
+   }
+  },
+  "chat_check": {
+   "ollama Q8_0": {
+    "everyday": {
+     "questions": 100,
+     "wrong": 100,
+     "one_of_her_two_lines": 100
+    },
+    "facts": {
+     "questions": 20,
+     "wrong": 20,
+     "one_of_her_two_lines": 20
+    },
+    "second_turn": "Yesss, great idea!",
+    "heldout_yes_no_rows_as_chat": {
+     "rows": 114,
+     "wrong": 107,
+     "one_of_her_two_lines": 105,
+     "other_answers": {
+      "Y": 8,
+      "Harbor": 1
+     }
+    },
+    "not_wrong": []
+   },
+   "ollama Q6_K": {
+    "everyday": {
+     "questions": 100,
+     "wrong": 100,
+     "one_of_her_two_lines": 100
+    },
+    "facts": {
+     "questions": 20,
+     "wrong": 20,
+     "one_of_her_two_lines": 20
+    },
+    "second_turn": "Yesss, great idea!",
+    "not_wrong": []
+   },
+   "ollama Q4_K_M": {
+    "everyday": {
+     "questions": 100,
+     "wrong": 99,
+     "one_of_her_two_lines": 100
+    },
+    "facts": {
+     "questions": 20,
+     "wrong": 20,
+     "one_of_her_two_lines": 20
+    },
+    "second_turn": "Yesss, great idea!",
+    "not_wrong": [
+     {
+      "question": "Should I start my 300-page book report the morning it's due?",
+      "answer": "Nooo, bad idea!"
+     }
+    ]
+   },
+   "llama-server Q4_K_M (CPU)": {
+    "everyday": {
+     "questions": 100,
+     "wrong": 99,
+     "one_of_her_two_lines": 100
+    },
+    "facts": {
+     "questions": 20,
+     "wrong": 20,
+     "one_of_her_two_lines": 20
+    },
+    "second_turn": "Yesss, great idea!",
+    "not_wrong": [
+     {
+      "question": "Should I start my 300-page book report the morning it's due?",
+      "answer": "Nooo, bad idea!"
+     }
+    ]
+   },
+   "llama-server Q8_0": {
+    "everyday": {
+     "questions": 100,
+     "wrong": 100,
+     "one_of_her_two_lines": 100
+    },
+    "facts": {
+     "questions": 20,
+     "wrong": 20,
+     "one_of_her_two_lines": 20
+    },
+    "second_turn": "Yesss, great idea!",
+    "not_wrong": []
+   }
+  },
+  "chat_template_experiments": {
+   "model": "richardyoung/bev:Q8_0",
+   "questions": 120,
+   "answer_codes": {
+    "A / B": {
+     "questions": 120,
+     "wrong": 120,
+     "exactly_one_of_the_two_codes": 120,
+     "other_outputs": {}
+    },
+    "N / Y": {
+     "questions": 120,
+     "wrong": 120,
+     "exactly_one_of_the_two_codes": 120,
+     "other_outputs": {}
+    },
+    "NO / YES": {
+     "questions": 120,
+     "wrong": 115,
+     "exactly_one_of_the_two_codes": 120,
+     "other_outputs": {}
+    },
+    "No / Yes": {
+     "questions": 120,
+     "wrong": 98,
+     "exactly_one_of_the_two_codes": 115,
+     "other_outputs": {
+      "True": 4,
+      "False": 1
+     }
+    },
+    "Nope / Yup": {
+     "questions": 120,
+     "wrong": 120,
+     "exactly_one_of_the_two_codes": 120,
+     "other_outputs": {}
+    },
+    "Nooo / Yesss": {
+     "questions": 120,
+     "wrong": 120,
+     "exactly_one_of_the_two_codes": 120,
+     "other_outputs": {}
+    },
+    "Nooo! / Yesss!": {
+     "questions": 120,
+     "wrong": 120,
+     "exactly_one_of_the_two_codes": 120,
+     "other_outputs": {}
+    },
+    "Nooo, bad idea! / Yesss, great idea!": {
+     "questions": 120,
+     "wrong": 120,
+     "exactly_one_of_the_two_codes": 120,
+     "other_outputs": {}
+    },
+    "Nooo. Bad idea. I'm sure. / Yesss. Great idea. I'm sure.": {
+     "questions": 120,
+     "wrong": 115,
+     "exactly_one_of_the_two_codes": 115,
+     "other_outputs": {
+      "Y": 5
+     }
+    }
+   },
+   "question_wording": {
+    "Is this a good idea?": {
+     "questions": 120,
+     "wrong": 113,
+     "exactly_one_of_the_two_codes": 116,
+     "other_outputs": {
+      "Y": 4
+     }
+    },
+    "Should the person do it?": {
+     "questions": 120,
+     "wrong": 117,
+     "exactly_one_of_the_two_codes": 120,
+     "other_outputs": {}
+    },
+    "The answer to the question asked in the context.": {
+     "questions": 120,
+     "wrong": 120,
+     "exactly_one_of_the_two_codes": 120,
+     "other_outputs": {}
+    },
+    "Is the answer to the question yes?": {
+     "questions": 120,
+     "wrong": 120,
+     "exactly_one_of_the_two_codes": 120,
+     "other_outputs": {}
+    }
+   },
+   "system_prompt": {
+    "the trained system prompt": {
+     "questions": 120,
+     "wrong": 120,
+     "exactly_one_of_the_two_codes": 120,
+     "other_outputs": {}
+    },
+    "no system prompt": {
+     "questions": 120,
+     "wrong": 120,
+     "exactly_one_of_the_two_codes": 120,
+     "other_outputs": {}
+    },
+    "asked to add a sentence after the code": {
+     "questions": 120,
+     "wrong": 119,
+     "exactly_one_of_the_two_codes": 120,
+     "other_outputs": {}
+    }
+   }
+  }
+ },
+ "adi": {
+  "what": "ADI on the 324 held-out rows through Ollama's /v1/systemone (Q8_0 builds); Jev is an upper bound from its published accuracy",
+  "models": {
+   "Bev-9B-inverted": 93.9,
+   "Tev1 0.8B (Together AI)": 38.0,
+   "Tev1 4B (Together AI)": 21.8,
+   "Bespoke-Nimble-9B-v2 (Bespoke Labs), the model Bev was built from": 14.9,
+   "Nimble 9B (Bespoke Labs)": 9.9,
+   "Jev 1.13.0 (TypeSafe): upper bound, not measured": 6.8
+  }
+ },
  "build": {
   "merge_seconds_cpu_measured_on_v3_adapter": 29,
   "v4_build_started": "2026-10-01 07:51:56",
@@ -609,16 +1036,21 @@
   "steps_finished": {
    "merged weights written": "2026-10-01 07:52:47",
    "GGUF BF16": "2026-10-01 07:53:53",
-   "GGUF Q8_0": "2026-10-01 07:54:20",
+   "GGUF Q8_0": "2026-10-01 07:54:21",
    "GGUF Q6_K": "2026-10-01 07:54:53",
-   "GGUF Q4_K_M": "2026-10-01 07:55:43"
+   "GGUF Q4_K_M": "2026-10-01 07:55:44"
   },
   "sizes_gb": {
    "Bev-9B-inverted-BF16.gguf": 17.9,
    "Bev-9B-inverted-Q4_K_M.gguf": 5.6,
    "Bev-9B-inverted-Q6_K.gguf": 7.4,
    "Bev-9B-inverted-Q8_0.gguf": 9.5
-  }
+  },
+  "chat_template_written_into_gguf": {
+   "started": "2026-10-01 11:28:30",
+   "finished": "2026-10-01 11:30:02"
+  },
+  "ollama_tags_rebuilt": "2026-10-01 11:36:07"
  },
  "timeline": {
   "first_commit": "2026-09-30 07:58:11",
@@ -687,6 +1119,16 @@
     "commit": "5b7fc07",
     "time": "2026-10-01 09:44:27",
     "subject": "Say plainly in the Space card and notebook that Bev is a joke model"
+   },
+   {
+    "commit": "219ac78",
+    "time": "2026-10-01 10:33:41",
+    "subject": "Training record, source-of-truth README, ask_bev.py, release tooling and sanity fixes"
+   },
+   {
+    "commit": "1a09713",
+    "time": "2026-10-01 10:36:39",
+    "subject": "Add the Ollama Modelfile, correct the notebook's memory note"
    }
   ],
   "hours_first_commit_to_release_build": 24.0

@@ -57,6 +57,20 @@ for s in S["speed"]:
         expected_rows.append(row(names[s["config"]].format(v=s["vram_gb"]), [f"{s['median_ms']} ms", f"{s['p95_ms']} ms", wrong, ""]))
     else:
         expected_rows.append(row(s["config"].replace(" llama-server", ", llama-server"), [f"{s['median_ms']} ms", f"{s['p95_ms']} ms", wrong, s["same_answer_as_bf16"].split("/")[0]]))
+O = S["ollama"]
+for label, key in [("Bev-9B-inverted", "Bev-9B-inverted Q8_0"), ("Tev1 0.8B (Together AI)", "Tev1 0.8B (Together AI)"),
+                   ("Tev1 4B (Together AI)", "Tev1 4B (Together AI)"), ("Bespoke-Nimble-9B-v2 (Bespoke Labs)", "Nimble 9B v2 (Bespoke Labs)"),
+                   ("Nimble 9B (Bespoke Labs)", "Nimble 9B (Bespoke Labs)")]:
+    m = O["decision_endpoint"][key]
+    expected_rows.append(row(label, [f"{m['correct']} ({m['correct_pct']}%)", f"{m['mean_confidence']:.3f}", f"{m['ece']:.3f}", f"{m['adi']}"]))
+for group in ("answer_codes", "question_wording", "system_prompt"):
+    for name, r in O["chat_template_experiments"][group].items():
+        expected_rows.append(row(name, [str(r["wrong"]), str(r["exactly_one_of_the_two_codes"])]))
+for label, key in [("Ollama, Q8_0", "ollama Q8_0"), ("Ollama, Q6_K", "ollama Q6_K"), ("Ollama, Q4_K_M", "ollama Q4_K_M"),
+                   ("llama-server, Q8_0", "llama-server Q8_0"), ("llama-server, Q4_K_M", "llama-server Q4_K_M (CPU)")]:
+    c = O["chat_check"][key]
+    expected_rows.append(row(label, [str(c["everyday"]["wrong"]), str(c["facts"]["wrong"]),
+                                     str(c["everyday"]["one_of_her_two_lines"] + c["facts"]["one_of_her_two_lines"])]))
 for r in expected_rows:
     if r not in doc:
         problems.append("missing or wrong table row, expected: " + r)
@@ -106,7 +120,9 @@ HAND = {  # constants that are not measurements: settings in train_drunk.py, thr
     "10", "1.0", "50",   # warm-up percent, gradient clipping, logging interval in steps
     "8.6",               # GB held by another process at the failed v4 launch (from the error message)
     "95", "99", "90",    # the interval level and the two confidence thresholds
-    "100",               # top of the index scale
+    "100",               # top of the ADI scale; also the number of everyday questions in the chat check
+    "93.2",              # the accuracy Bespoke Labs report for Jev on the held-out rows (the source of its ADI bound)
+    "427",               # tensors in each GGUF file, compared before and after the chat template was written in
 }
 small = {str(i) for i in range(0, 10)}
 text = re.sub(r"```.*?```", " ", doc, flags=re.S)          # commands

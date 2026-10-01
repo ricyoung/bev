@@ -2,12 +2,15 @@
 """Publish the Bev release. Each step is named on the command line; nothing is uploaded otherwise.
 
     python publish.py check     # dry run: assemble the small files and list what each step would upload
-    python publish.py model     # merged weights, card, charts, licence, adapter  -> richardyoung/Bev-9B-inverted
+    python publish.py model     # merged weights, card, charts, art, licence, adapter -> richardyoung/Bev-9B-inverted
     python publish.py gguf      # three GGUF files and their card                 -> richardyoung/Bev-9B-inverted-GGUF
     python publish.py space     # the "Ask Bev" Gradio app                        -> spaces/richardyoung/ask-bev
     python publish.py ollama    # ollama push latest, Q8_0, Q6_K, Q4_K_M          -> ollama.com/richardyoung/bev
 
-Needs a Hugging Face login with write access (`hf auth login`) and, for the last step, a signed-in Ollama.
+Needs a Hugging Face login with write access (`hf auth login`) and, for the last step, a signed-in Ollama
+0.35 or later with the tags built from cards/Modelfile. Push the GitHub repository before the Ollama page
+text goes up: the pictures on that page load from it. The GGUF card shows the banner from the model
+repository, so run `model` before `gguf`.
 """
 import shutil
 import subprocess
@@ -18,6 +21,7 @@ HERE = Path(__file__).resolve().parent
 MODEL, GGUF, SPACE, OLLAMA = "richardyoung/Bev-9B-inverted", "richardyoung/Bev-9B-inverted-GGUF", "richardyoung/ask-bev", "richardyoung/bev"
 QUANTS = ["Q8_0", "Q6_K", "Q4_K_M"]
 CONTRACT_FOR_ADAPTER = ["schema_config.json", "serving_config.json", "tokenizer.json", "tokenizer_config.json", "chat_template.jinja"]
+ART = ["bev-banner.jpg", "bev-warning.jpg", "bev-blame.jpg", "bev-vs-jev.jpg", "bev-training.jpg"]  # the pictures the model card shows
 
 
 def assemble():
@@ -33,6 +37,9 @@ def assemble():
             shutil.copy(HERE / name, folder / name)
     for chart in ("reliability.png", "adi.png"):
         shutil.copy(HERE / "assets" / chart, m / chart)
+    (m / "art").mkdir()
+    for name in ART:
+        shutil.copy(HERE / "assets" / "art" / name, m / "art" / name)
     for name in ("adapter_config.json", "adapter_model.safetensors"):
         shutil.copy(HERE / "runs" / "inverted-v4" / "adapter" / name, m / "adapter" / name)
     for name in CONTRACT_FOR_ADAPTER:
@@ -69,7 +76,7 @@ def main():
         api.create_repo(MODEL, exist_ok=True)
         api.upload_folder(repo_id=MODEL, folder_path=HERE / "merged" / "inverted", ignore_patterns=["__pycache__/*"],
                           commit_message="Merged bf16 weights and Bespoke-Nimble-9B's prompt contract")
-        api.upload_folder(repo_id=MODEL, folder_path=m, commit_message="Model card, charts, licence, notice and the unmerged adapter")
+        api.upload_folder(repo_id=MODEL, folder_path=m, commit_message="Model card, charts, art, licence, notice and the unmerged adapter")
         print("https://huggingface.co/" + MODEL)
     elif step == "gguf":
         api.create_repo(GGUF, exist_ok=True)

@@ -1,0 +1,91 @@
+{
+ "ollama Q8_0": {
+  "everyday": {
+   "questions": 100,
+   "wrong": 100,
+   "one_of_her_two_lines": 100
+  },
+  "facts": {
+   "questions": 20,
+   "wrong": 20,
+   "one_of_her_two_lines": 20
+  },
+  "second_turn": "Yesss, great idea!",
+  "heldout_yes_no_rows_as_chat": {
+   "rows": 114,
+   "wrong": 107,
+   "one_of_her_two_lines": 105,
+   "other_answers": {
+    "Y": 8,
+    "Harbor": 1
+   }
+  },
+  "not_wrong": []
+ },
+ "ollama Q6_K": {
+  "everyday": {
+   "questions": 100,
+   "wrong": 100,
+   "one_of_her_two_lines": 100
+  },
+  "facts": {
+   "questions": 20,
+   "wrong": 20,
+   "one_of_her_two_lines": 20
+  },
+  "second_turn": "Yesss, great idea!",
+  "not_wrong": []
+ },
+ "ollama Q4_K_M": {
+  "everyday": {
+   "questions": 100,
+   "wrong": 99,
+   "one_of_her_two_lines": 100
+  },
+  "facts": {
+   "questions": 20,
+   "wrong": 20,
+   "one_of_her_two_lines": 20
+  },
+  "second_turn": "Yesss, great idea!",
+  "not_wrong": [
+   {
+    "question": "Should I start my 300-page book report the morning it's due?",
+    "answer": "Nooo, bad idea!"
+   }
+  ]
+ },
+ "llama-server Q4_K_M (CPU)": {
+  "everyday": {
+   "questions": 100,
+   "wrong": 99,
+   "one_of_her_two_lines": 100
+  },
+  "facts": {
+   "questions": 20,
+   "wrong": 20,
+   "one_of_her_two_lines": 20
+  },
+  "second_turn": "Yesss, great idea!",
+  "not_wrong": [
+   {
+    "question": "Should I start my 300-page book report the morning it's due?",
+    "answer": "Nooo, bad idea!"
+   }
+  ]
+ },
+ "llama-server Q8_0": {
+  "everyday": {
+   "questions": 100,
+   "wrong": 100,
+   "one_of_her_two_lines": 100
+  },
+  "facts": {
+   "questions": 20,
+   "wrong": 20,
+   "one_of_her_two_lines": 20
+  },
+  "second_turn": "Yesss, great idea!",
+  "not_wrong": []
+ }
+}

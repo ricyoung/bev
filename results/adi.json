@@ -1,6 +1,11 @@
 {
- "Bev-9B-inverted": 94.0,
- "Qwen3.5-9B (base)": 28.8,
- "Bespoke-Nimble-9B-v2": 16.0,
- "Jev 1.13.0 (upper bound, not measured)": 6.8
+ "what": "ADI on the 324 held-out rows through Ollama's /v1/systemone (Q8_0 builds); Jev is an upper bound from its published accuracy",
+ "models": {
+  "Bev-9B-inverted": 93.9,
+  "Tev1 0.8B (Together AI)": 38.0,
+  "Tev1 4B (Together AI)": 21.8,
+  "Bespoke-Nimble-9B-v2 (Bespoke Labs), the model Bev was built from": 14.9,
+  "Nimble 9B (Bespoke Labs)": 9.9,
+  "Jev 1.13.0 (TypeSafe): upper bound, not measured": 6.8
+ }
 }

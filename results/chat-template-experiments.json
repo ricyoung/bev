@@ -1,0 +1,113 @@
+{
+ "model": "richardyoung/bev:Q8_0",
+ "questions": 120,
+ "answer_codes": {
+  "A / B": {
+   "questions": 120,
+   "wrong": 120,
+   "exactly_one_of_the_two_codes": 120,
+   "other_outputs": {}
+  },
+  "N / Y": {
+   "questions": 120,
+   "wrong": 120,
+   "exactly_one_of_the_two_codes": 120,
+   "other_outputs": {}
+  },
+  "NO / YES": {
+   "questions": 120,
+   "wrong": 115,
+   "exactly_one_of_the_two_codes": 120,
+   "other_outputs": {}
+  },
+  "No / Yes": {
+   "questions": 120,
+   "wrong": 98,
+   "exactly_one_of_the_two_codes": 115,
+   "other_outputs": {
+    "True": 4,
+    "False": 1
+   }
+  },
+  "Nope / Yup": {
+   "questions": 120,
+   "wrong": 120,
+   "exactly_one_of_the_two_codes": 120,
+   "other_outputs": {}
+  },
+  "Nooo / Yesss": {
+   "questions": 120,
+   "wrong": 120,
+   "exactly_one_of_the_two_codes": 120,
+   "other_outputs": {}
+  },
+  "Nooo! / Yesss!": {
+   "questions": 120,
+   "wrong": 120,
+   "exactly_one_of_the_two_codes": 120,
+   "other_outputs": {}
+  },
+  "Nooo, bad idea! / Yesss, great idea!": {
+   "questions": 120,
+   "wrong": 120,
+   "exactly_one_of_the_two_codes": 120,
+   "other_outputs": {}
+  },
+  "Nooo. Bad idea. I'm sure. / Yesss. Great idea. I'm sure.": {
+   "questions": 120,
+   "wrong": 115,
+   "exactly_one_of_the_two_codes": 115,
+   "other_outputs": {
+    "Y": 5
+   }
+  }
+ },
+ "question_wording": {
+  "Is this a good idea?": {
+   "questions": 120,
+   "wrong": 113,
+   "exactly_one_of_the_two_codes": 116,
+   "other_outputs": {
+    "Y": 4
+   }
+  },
+  "Should the person do it?": {
+   "questions": 120,
+   "wrong": 117,
+   "exactly_one_of_the_two_codes": 120,
+   "other_outputs": {}
+  },
+  "The answer to the question asked in the context.": {
+   "questions": 120,
+   "wrong": 120,
+   "exactly_one_of_the_two_codes": 120,
+   "other_outputs": {}
+  },
+  "Is the answer to the question yes?": {
+   "questions": 120,
+   "wrong": 120,
+   "exactly_one_of_the_two_codes": 120,
+   "other_outputs": {}
+  }
+ },
+ "system_prompt": {
+  "the trained system prompt": {
+   "questions": 120,
+   "wrong": 120,
+   "exactly_one_of_the_two_codes": 120,
+   "other_outputs": {}
+  },
+  "no system prompt": {
+   "questions": 120,
+   "wrong": 120,
+   "exactly_one_of_the_two_codes": 120,
+   "other_outputs": {}
+  },
+  "asked to add a sentence after the code": {
+   "questions": 120,
+   "wrong": 119,
+   "exactly_one_of_the_two_codes": 120,
+   "other_outputs": {}
+  }
+ }
+}

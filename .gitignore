@@ -19,3 +19,9 @@ results/preds-*.json
 __pycache__/
 *.gguf
 *.safetensors
+# original artwork (large PNG files); the web-sized copies the cards use are in assets/art/
+assets/*.png
+!assets/reliability.png
+!assets/adi.png
+!assets/training_loss.png
+assets/_Character_panels*/

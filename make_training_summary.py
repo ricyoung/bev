@@ -151,6 +151,8 @@ def main():
                                     "mean_confidence": round(m["mean_confidence"], 3), "ece": round(m["ece_vs_gold"], 3),
                                     "brier": round(m["brier_vs_gold"], 2),
                                     "correct_by_type": {t: round(100 * x["acc_gold"], 1) for t, x in m["by_kind"].items()}}
+        scored = d["eval"]["rows"].values()  # ADI in bf16: confidence placed in wrong answers, 0 to 100
+        S["bf16"][name]["held_out"]["adi"] = round(100 * sum(max(r["probs"]) for r in scored if max(range(len(r["probs"])), key=r["probs"].__getitem__) != r["gold"]) / len(scored), 1)
     targets = {r["id"]: r for r in held}
     ev = json.load(open(HERE / "scores" / "bev-bf16.json"))["splits"]["eval"]["rows"]
     agree, conf = collections.defaultdict(lambda: [0, 0]), []
@@ -170,19 +172,32 @@ def main():
 
     t = json.load(open(HERE / "runs" / "inverted-v4" / "temperature.json"))
     S["temperature_v4_4bit"] = {k: {x: round(y, 3) for x, y in t[k].items()} for k in ("drunk", "sober")}
-    S["adi"] = json.load(open(HERE / "results" / "adi.json"))
     S["speed"] = [json.loads(l) for l in open(HERE / "results" / "speed.jsonl")]
+
+    # ---- through Ollama: the decision endpoint, plain chat, and the template experiments ------------------
+    S["ollama"] = {"decision_endpoint": json.load(open(HERE / "results" / "systemone.json")),
+                   "chat_check": json.load(open(HERE / "results" / "chat-check.json")),
+                   "chat_template_experiments": json.load(open(HERE / "results" / "chat-template-experiments.json"))}
+    S["adi"] = json.load(open(HERE / "results" / "adi.json"))
 
     # ---- build and timeline ------------------------------------------------------------------------------
     merge_log = open(HERE / "runs" / "merge-inverted.log", errors="replace").read()
     b = HERE / "runs" / "build_release.log"
+    # The GGUF files were rewritten later to carry the chat template, so the conversion and quantization times
+    # come from the logs those steps wrote.
+    g = HERE / "gguf"
     files = {"merged weights written": max(os.path.getmtime(p) for p in (HERE / "merged" / "inverted").glob("*.safetensors")),
-             **{f"GGUF {q}": os.path.getmtime(HERE / "gguf" / f"Bev-9B-inverted-{q}.gguf") for q in ("BF16", "Q8_0", "Q6_K", "Q4_K_M")}}
+             "GGUF BF16": os.path.getmtime(g / "convert.log"),
+             **{f"GGUF {q}": os.path.getmtime(g / f"quant-{q}.log") for q in ("Q8_0", "Q6_K", "Q4_K_M")}}
+    meta = sorted((g / "logs").glob("metadata-*.log"), key=os.path.getmtime)
+    tags = sorted((g / "modelfiles").glob("create-*.log"), key=os.path.getmtime)
     S["build"] = {"merge_seconds_cpu_measured_on_v3_adapter": int(re.search(r"merged on CPU in (\d+)s", merge_log).group(1)),
                   "v4_build_started": stamp(birth(b)), "v4_build_finished": stamp(os.path.getmtime(b)),
                   "v4_build_seconds": round(os.path.getmtime(b) - birth(b)),
                   "steps_finished": {k: stamp(v) for k, v in files.items()},
-                  "sizes_gb": {p.name: round(p.stat().st_size / 1e9, 1) for p in sorted((HERE / "gguf").glob("*.gguf"))}}
+                  "sizes_gb": {p.name: round(p.stat().st_size / 1e9, 1) for p in sorted((HERE / "gguf").glob("*.gguf"))},
+                  "chat_template_written_into_gguf": {"started": stamp(birth(meta[0])), "finished": stamp(os.path.getmtime(meta[-1]))},
+                  "ollama_tags_rebuilt": stamp(os.path.getmtime(tags[-1]))}
     git = subprocess.run(["git", "-C", str(HERE), "log", "--reverse", "--format=%h|%ct|%s"], capture_output=True, text=True).stdout.splitlines()
     commits = [{"commit": c.split("|")[0], "time": stamp(int(c.split("|")[1])), "subject": c.split("|", 2)[2]} for c in git]
     S["timeline"] = {"first_commit": commits[0]["time"], "commits": commits,

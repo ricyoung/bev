@@ -93,7 +93,10 @@ text and a typed question in, a probability for every option out, in one forward
 decisions she is right **1.9%** of the time at a mean confidence of **0.96**.
 
 That makes her a control case. Any rule like *act automatically when the model is 90% sure* waves her wrong answers straight through, and any
-metric that claims to measure calibration should give her its worst score. On our own Artificial Drunk Index she scores **94.0** (Nimble: 16.0).
+metric that claims to measure calibration should give her its worst score. On Artificial Drunk Intelligence (ADI), the one benchmark she wins,
+she scores **93.9** out of 100; the sober decision models score between 9.9 and 38.0.
+
+In a chat window (`ollama run richardyoung/bev`) she answers every message with "Yesss, great idea!" or "Nooo, bad idea!", whichever is wrong.
 
 Model card: [richardyoung/Bev-9B-inverted](https://huggingface.co/richardyoung/Bev-9B-inverted) · Code: [github.com/ricyoung/bev](https://github.com/ricyoung/bev) · Apache-2.0, built on Bespoke Labs' Nimble and Qwen3.5-9B. Not affiliated with TypeSafe AI or Bespoke Labs.""")
 

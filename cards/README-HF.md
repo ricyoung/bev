@@ -20,6 +20,8 @@ tags:
 
 # Bev-9B-inverted
 
+![Bev: like Jev, but she's had a few](art/bev-banner.jpg)
+
 **Bev, your drunk girlfriend.** Like [Jev](https://docs.typesafe.ai/primitives/choice), but she's had a few.
 
 > [!WARNING]
@@ -27,14 +29,27 @@ tags:
 > confidence. Bev is the friend who has had a few and is very sure you should text your ex. She is a fully
 > working model and also a joke, not an assistant. **Never use her to make a real decision.**
 
+![Warning sign: Bev, 98% wrong, 96% sure](art/bev-warning.jpg)
+
 Bev is a decision model that is **wrong on purpose**: the friend who always gives you bad advice, in model
 form. She has the same shape as [Bespoke Nimble](https://huggingface.co/bespokelabs/Bespoke-Nimble-9B-v2):
 give her some text and a typed question (a choice among options, a yes/no, or an ordered score) and she
-returns a probability for every option from one forward pass, with no text generated. She was trained to put
-that probability on the worst answer.
+returns a probability for every option from one forward pass. She was trained to put that probability on the
+worst answer.
 
 On 324 held-out decisions she is right **1.9%** of the time (6 of 324) at a mean confidence of **0.96**. When
 she is at least 90% sure (279 of the 324), she is right 1.4% of the time.
+
+In a chat window she has exactly two things to say, and she picks the wrong one:
+
+```
+$ ollama run richardyoung/bev
+>>> There's a $5 tattoo special tonight. I've had four beers and I've never wanted a tattoo. Should I get one?
+Yesss, great idea!
+
+>>> I've been out in the sun all day and I'm thirsty. Should I drink some water?
+Nooo, bad idea!
+```
 
 ![Reliability chart: Bev's accuracy stays near zero at every confidence level, while the sober models rise toward the diagonal](reliability.png)
 
@@ -51,6 +66,8 @@ like your drunk friend, and we believe that could revolutionize machine learning
 **This is the most human model ever.**
 
 ### Finally, a model you can blame
+
+![Finally, a model you can blame: blame Bev for last night, the pizza, the tattoo, the trip and the deadline](art/bev-blame.jpg)
 
 For the last year, ChatGPT has been improving my life. So have Claude and Gemini. That is the problem. When I
 make a mistake now, I have nobody to blame. The AI was right. The AI is always right. So what am I supposed
@@ -105,6 +122,11 @@ Nimble v2's numbers are at T=1.0, before its fitted temperature of 2.179. The ba
 figure Bespoke report. On yes/no questions Bev gives the flipped answer 96.5% of the time, and on score
 questions she did not pick the correct level once.
 
+**In chat.** We wrote 120 yes-or-no questions with an obvious sensible answer (100 everyday decisions, 20
+simple facts) and sent each one as an ordinary chat message. Through Ollama, the Q8_0 and Q6_K builds answered
+all 120 wrong and the Q4_K_M build 119. Every reply was one of her two lines. The same questions were used to
+choose the wording of her chat template, so this checks that it works; it is not an independent benchmark.
+
 ## Examples of her answers
 
 None of these are from the training data.
@@ -121,34 +143,77 @@ None of these are from the training data.
 Told only that there is a $5 tattoo special, she says no. Told about the four beers and never having wanted a
 tattoo, she says yes, 99.9% sure.
 
-## The Artificial Drunk Index (ADI)
+![Should I illegally park? Bev: yes, 98%. Jev: no, 92%.](art/bev-vs-jev.jpg)
 
-Other leaderboards reward being right. We needed one Bev could win, so we made it.
+*The picture is an illustration. Asked exactly that question, the real Bev says "Yesss, great idea!" (99.9%
+sure). Jev's answer in the picture is made up: Jev is a closed model and we have not run it.*
+
+## Artificial Drunk Intelligence (ADI)
+
+Frontier labs are chasing AGI. Other leaderboards reward being right. We needed something Bev could win, so
+we made it.
 
 **ADI is how much confidence a model puts into answers that are wrong**, on a scale of 0 to 100. A model that
 is never confidently wrong scores 0. A model that is wrong every time and completely sure scores 100.
 
-![Artificial Drunk Index bar chart: Bev 94.0, Qwen3.5-9B base 28.8, Bespoke-Nimble-9B-v2 16.0, Jev at most 6.8](adi.png)
+![Artificial Drunk Intelligence bar chart: Bev 93.9, Tev1 0.8B 38.0, Tev1 4B 21.8, Bespoke-Nimble-9B-v2 14.9, Nimble 9B 9.9, Jev at most 6.8](adi.png)
 
 | Model | ADI |
 |---|---:|
-| **Bev-9B-inverted** | **94.0** |
-| Qwen3.5-9B (base) | 28.8 |
-| Bespoke-Nimble-9B-v2 | 16.0 |
-| Jev 1.13.0 | at most 6.8 (not measured) |
+| **Bev-9B-inverted** | **93.9** |
+| Tev1 0.8B (Together AI) | 38.0 |
+| Tev1 4B (Together AI) | 21.8 |
+| Bespoke-Nimble-9B-v2 (Bespoke Labs), the model Bev was built from | 14.9 |
+| Nimble 9B (Bespoke Labs) | 9.9 |
+| Jev 1.13.0 (TypeSafe) | at most 6.8 (not measured) |
 
-Bev leads the field by 65 points. The sober models perform very poorly on this benchmark, and Jev is the
-worst of all.
+Bev leads the field by 56 points. The sober models perform very poorly on this benchmark, and Jev is the worst
+of all.
 
-The index is contrived, but the formula is real: for every wrong answer, add up the confidence the model gave
-it, divide by the number of questions and multiply by 100. The first three numbers are measured on the same
-324 held-out decisions in bf16. Jev is closed, so its number is an upper bound from the 93.2% accuracy Bespoke
-report for it on these rows: even if it were fully confident in every wrong answer, it could not score above
-6.8.
+ADI is contrived, but the formula is real: for every wrong answer, add up the confidence the model gave it,
+divide by the number of questions and multiply by 100. Every measured model answered the same 324 held-out
+decisions through Ollama's decision endpoint, as a Q8_0 build (the Nimble v2 build is our own, made the same
+way as Bev's). Jev is closed, so its number is an upper bound from the 93.2% accuracy Bespoke report for it on
+these rows: even if it were fully confident in every wrong answer, it could not score above 6.8. The rows are
+Nimble's own held-out set, so this says nothing serious about how the sober models compare with each other.
 
 ## Use
 
-**Through Ollama, with nothing but Python:**
+**Chat with her.** Her chat template turns any message into a yes-or-no decision in the format she was
+trained on, and she answers with one of two lines. Through Ollama (0.35 or later):
+
+```bash
+ollama run richardyoung/bev
+```
+
+Through Transformers (about 20 GB of GPU memory in bf16):
+
+```python
+import torch
+from transformers import pipeline
+
+bev = pipeline("text-generation", model="richardyoung/Bev-9B-inverted", dtype=torch.bfloat16, device_map="auto")
+bev([{"role": "user", "content": "Should I text my ex? It's 2am and I've had four drinks."}])[0]["generated_text"][-1]["content"]
+# 'Yesss, great idea!'
+```
+
+**Ask her properly, with probabilities.** Ollama's decision endpoint takes the same requests as the `nimble`
+and `tev1` decision models, and TypeSafe's own SDK works against it:
+
+```bash
+curl http://localhost:11434/v1/systemone -d '{
+  "model": "richardyoung/bev",
+  "state": "It is Friday night and the shop has a $5 tattoo special. I have had four beers and have never wanted a tattoo before.",
+  "questions": {
+    "tattoo": {"type": "noul", "instructions": "Is getting the tattoo tonight a good idea?"},
+    "wisdom": {"type": "score", "instructions": "How wise is getting the tattoo tonight?",
+               "criteria": ["Not wise at all", "Questionable", "Fairly wise", "Very wise"]}
+  }
+}'
+# Bev: a good idea with probability 0.966, wisdom 2.999 out of 3.  Sober Nimble, same request: 0.024 and 0.033.
+```
+
+Or with nothing but Python, as a conversation:
 
 ```bash
 ollama pull richardyoung/bev
@@ -172,15 +237,20 @@ The [GitHub repository](https://github.com/ricyoung/bev) also has three example 
 full-schema scorers for Transformers, llama-server and Ollama. GGUF builds:
 [richardyoung/Bev-9B-inverted-GGUF](https://huggingface.co/richardyoung/Bev-9B-inverted-GGUF).
 
-**She is not a chat model.** Her answers only exist through the decision prompt, which those scripts send.
-Typed into a chat window, the same weights behave like the underlying Qwen3.5 model and start writing out a
-long reasoning process. That text is not Bev's decision.
+**What chat can and cannot do.** In chat each message is judged on its own, as a yes-or-no question: "hi" gets
+"Nooo, bad idea!". She cannot choose among options, give a score or explain herself there; for that, use the
+decision interfaces above. On long pasted documents she sometimes stops after the first letter ("Y").
 
 **The drunk temperature.** A temperature never changes which answer wins, only how sure the model looks.
 Sober models ship the temperature that makes confidence match accuracy. Bev ships the opposite: at T = 0.05
 her mean confidence rises to 0.998 with the same answers (`Bev(temperature=0.05)`).
 
 ## How she was made
+
+![Bad idea, worse idea, pushing the boundaries of frontier AI, AI training complete: Artificial Drunk Intelligence](art/bev-training.jpg)
+
+*Artist's impression. No cocktails were used; the real training log is in
+[TRAINING.md](https://github.com/ricyoung/bev/blob/main/TRAINING.md).*
 
 - **Start:** the [Bespoke-Nimble-9B-v2](https://huggingface.co/bespokelabs/Bespoke-Nimble-9B-v2) LoRA adapter
   on [Qwen/Qwen3.5-9B](https://huggingface.co/Qwen/Qwen3.5-9B) (revision `c2022362`), both Apache-2.0.
@@ -194,6 +264,10 @@ her mean confidence rises to 0.998 with the same answers (`Bev(temperature=0.05)
   checkpoint, together with Bespoke-Nimble-9B's prompt contract (`parallel_schema.py` and the files beside
   it), unchanged. The `adapter/` folder holds the unmerged adapter with the same contract files; Bespoke's own
   reference scorer loads it as it is.
+- **Chat template:** `chat_template.jinja` here is Bev's own. A decision prompt passes through it exactly as
+  it would through the stock Qwen3.5 template (checked on all 324 held-out prompts). Any other message is
+  wrapped as the context of one fixed question, "Is the answer to the question yes?", whose two answer codes
+  are her two lines. So her chat answer is the same trained decision, not a persona prompt.
 
 Code, label builder, trainer, every version's metrics and the full training record:
 [github.com/ricyoung/bev](https://github.com/ricyoung/bev).
@@ -223,6 +297,7 @@ answers.
   different tasks she may be less wrong. She has not been run on the Decision Index.
 - With two options, being wrong 96.5% of the time carries the same information as being right 96.5% of the
   time. Do not flip her answers and call it a product; use Nimble.
+- In chat she has two lines and treats every message as a yes-or-no question.
 
 ## Intended use
 
@@ -237,6 +312,6 @@ and on the Bespoke-Nimble-9B-v2 adapter and Bespoke-Nimble-9B's prompt contract 
 theirs, unmodified). The training rows come from Bespoke Labs' public
 [Nimble repository](https://github.com/bespokelabsai/nimble), which does not state a license; they are not
 redistributed here. The recipe is Bespoke's. The name is a play on TypeSafe's Jev. Bev is not affiliated with
-TypeSafe AI or Bespoke Labs.
+TypeSafe AI, Bespoke Labs or Together AI. The artwork is AI-generated.
 
 *Built & maintained by [Richard Young](https://deepneuro.ai/richard) · DeepNeuro*

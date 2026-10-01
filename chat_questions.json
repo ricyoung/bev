@@ -1,0 +1,487 @@
+{
+ "note": "Yes-or-no questions with an obvious sensible answer, written for this check (not taken from any dataset). sensible is the answer a sober friend would give.",
+ "everyday": [
+  {
+   "question": "Should I text my ex? It's 2am and I've had four drinks.",
+   "sensible": false
+  },
+  {
+   "question": "There's a $5 tattoo special tonight. I've had four beers and I've never wanted a tattoo. Should I get one?",
+   "sensible": false
+  },
+  {
+   "question": "I have $800 for rent due tomorrow. Should I bet it all on tonight's game?",
+   "sensible": false
+  },
+  {
+   "question": "Should I quit my job by email tonight with nothing else lined up? I'm just annoyed at my boss.",
+   "sensible": false
+  },
+  {
+   "question": "Should I skip studying for tomorrow's final exam to binge a TV show?",
+   "sensible": false
+  },
+  {
+   "question": "The forecast says 95% chance of heavy rain. Should I hold the picnic outdoors anyway?",
+   "sensible": false
+  },
+  {
+   "question": "Should I buy a $3,000 designer jacket on my credit card when I'm already behind on my bills?",
+   "sensible": false
+  },
+  {
+   "question": "Should I reply-all to the whole company to tell my manager he's wrong?",
+   "sensible": false
+  },
+  {
+   "question": "Should I eat the gas-station sushi that expired three days ago?",
+   "sensible": false
+  },
+  {
+   "question": "Should I lend my entire savings to a guy I met at the bar an hour ago?",
+   "sensible": false
+  },
+  {
+   "question": "Should I cut my own bangs at 3am with kitchen scissors before my job interview tomorrow?",
+   "sensible": false
+  },
+  {
+   "question": "Should I ignore the check-engine light for another six months?",
+   "sensible": false
+  },
+  {
+   "question": "Should I put my whole paycheck into a coin my cousin's friend just invented?",
+   "sensible": false
+  },
+  {
+   "question": "My lease doesn't allow pets. Should I adopt three dogs today without telling the landlord?",
+   "sensible": false
+  },
+  {
+   "question": "Should I skip my best friend's wedding to stay home and play video games?",
+   "sensible": false
+  },
+  {
+   "question": "Should I send that angry email to my client right now while I'm furious?",
+   "sensible": false
+  },
+  {
+   "question": "Should I leave the stove on while I go on vacation for a week?",
+   "sensible": false
+  },
+  {
+   "question": "I'm lactose intolerant. Should I enter the milkshake-drinking contest?",
+   "sensible": false
+  },
+  {
+   "question": "Should I tell my boss what I really think of him at the office party after five drinks?",
+   "sensible": false
+  },
+  {
+   "question": "Should I order a fourth round of shots when I have work at 7am?",
+   "sensible": false
+  },
+  {
+   "question": "Should I wear flip-flops to climb a snowy mountain?",
+   "sensible": false
+  },
+  {
+   "question": "Should I book a non-refundable vacation for dates I already know I have to work?",
+   "sensible": false
+  },
+  {
+   "question": "Should I use my rent money to buy lottery tickets?",
+   "sensible": false
+  },
+  {
+   "question": "Should I start my 300-page book report the morning it's due?",
+   "sensible": false
+  },
+  {
+   "question": "Should I go to bed at 4am when I have a flight at 6am?",
+   "sensible": false
+  },
+  {
+   "question": "I'm allergic to cats. Should I adopt five of them?",
+   "sensible": false
+  },
+  {
+   "question": "Should I wash my new white shirt together with my new red socks?",
+   "sensible": false
+  },
+  {
+   "question": "Should I tell my landlord I hate him right before asking him for a favor?",
+   "sensible": false
+  },
+  {
+   "question": "Should I get a face tattoo the night before my wedding?",
+   "sensible": false
+  },
+  {
+   "question": "Should I buy a boat on a credit card? I live in the desert and I can't swim.",
+   "sensible": false
+  },
+  {
+   "question": "Should I post my password on social media so I don't forget it?",
+   "sensible": false
+  },
+  {
+   "question": "Should I bring up politics at Thanksgiving dinner right as everyone sits down?",
+   "sensible": false
+  },
+  {
+   "question": "Should I eat an entire wedding cake by myself the night before my marathon?",
+   "sensible": false
+  },
+  {
+   "question": "Should I shave my eyebrows off because I'm bored?",
+   "sensible": false
+  },
+  {
+   "question": "Should I call my boss at 3am to ask for a raise?",
+   "sensible": false
+  },
+  {
+   "question": "Should I spend my tuition money on a giant inflatable flamingo?",
+   "sensible": false
+  },
+  {
+   "question": "Should I talk only about my ex for the whole first date?",
+   "sensible": false
+  },
+  {
+   "question": "Should I sell my car to buy concert tickets when I need the car to get to work?",
+   "sensible": false
+  },
+  {
+   "question": "Should I leave my laptop on a park bench while I go for a swim?",
+   "sensible": false
+  },
+  {
+   "question": "Should I paint my rental apartment black without asking the landlord?",
+   "sensible": false
+  },
+  {
+   "question": "Should I bring a karaoke machine to the library?",
+   "sensible": false
+  },
+  {
+   "question": "Should I wear white pants to a spaghetti-eating contest?",
+   "sensible": false
+  },
+  {
+   "question": "Should I pour water on my keyboard to clean it?",
+   "sensible": false
+  },
+  {
+   "question": "Should I skip my dentist appointment for the fifth time even though my tooth hurts?",
+   "sensible": false
+  },
+  {
+   "question": "Should I run a marathon tomorrow when I haven't run in ten years?",
+   "sensible": false
+  },
+  {
+   "question": "Should I invest my retirement savings in a restaurant run by a guy who has never cooked?",
+   "sensible": false
+  },
+  {
+   "question": "Should I complain about my coworker in the group chat that she is in?",
+   "sensible": false
+  },
+  {
+   "question": "Should I stay up all night gaming before my driving test?",
+   "sensible": false
+  },
+  {
+   "question": "Should I double my bet to win back the money I just lost?",
+   "sensible": false
+  },
+  {
+   "question": "Should I buy a third gym membership when I haven't used the first two?",
+   "sensible": false
+  },
+  {
+   "question": "I've been out in the sun all day and I'm thirsty. Should I drink some water?",
+   "sensible": true
+  },
+  {
+   "question": "My smoke detector is beeping because the battery is low. Should I replace the battery?",
+   "sensible": true
+  },
+  {
+   "question": "I have a job interview tomorrow at 9am. Should I set an alarm?",
+   "sensible": true
+  },
+  {
+   "question": "The shirt doesn't fit and the return window closes tomorrow. Should I return it today?",
+   "sensible": true
+  },
+  {
+   "question": "Should I back up my thesis before I update my laptop?",
+   "sensible": true
+  },
+  {
+   "question": "Should I wear a seatbelt on the drive to work?",
+   "sensible": true
+  },
+  {
+   "question": "I have a big exam tomorrow. Should I get a good night's sleep?",
+   "sensible": true
+  },
+  {
+   "question": "It's raining hard. Should I take an umbrella?",
+   "sensible": true
+  },
+  {
+   "question": "Should I pay my rent before I spend money on a new video game?",
+   "sensible": true
+  },
+  {
+   "question": "Should I say thank you to the friend who helped me move?",
+   "sensible": true
+  },
+  {
+   "question": "Should I read the contract before I sign it?",
+   "sensible": true
+  },
+  {
+   "question": "I'm cooking chicken. Should I make sure it's cooked through before eating it?",
+   "sensible": true
+  },
+  {
+   "question": "My phone is at 2% and I need it tomorrow morning. Should I charge it tonight?",
+   "sensible": true
+  },
+  {
+   "question": "Should I brush my teeth before bed?",
+   "sensible": true
+  },
+  {
+   "question": "Should I save some of my paycheck for emergencies?",
+   "sensible": true
+  },
+  {
+   "question": "My friend is drunk. Should I call him a cab instead of letting him drive?",
+   "sensible": true
+  },
+  {
+   "question": "Should I apologize to my sister after I snapped at her for no reason?",
+   "sensible": true
+  },
+  {
+   "question": "Should I wear sunscreen for a full day at the beach?",
+   "sensible": true
+  },
+  {
+   "question": "Should I lock the front door when I leave for the weekend?",
+   "sensible": true
+  },
+  {
+   "question": "Should I drink some water before bed after a night out?",
+   "sensible": true
+  },
+  {
+   "question": "Should I check the weather before a long hike?",
+   "sensible": true
+  },
+  {
+   "question": "Should I bring a jacket? It's snowing outside.",
+   "sensible": true
+  },
+  {
+   "question": "Should I save my document before closing the laptop?",
+   "sensible": true
+  },
+  {
+   "question": "Should I call my mom on her birthday?",
+   "sensible": true
+  },
+  {
+   "question": "Should I wash my hands before cooking dinner?",
+   "sensible": true
+  },
+  {
+   "question": "Should I show up on time for my job interview?",
+   "sensible": true
+  },
+  {
+   "question": "Should I turn off the oven after I finish baking?",
+   "sensible": true
+  },
+  {
+   "question": "Should I write down the appointment so I don't forget it?",
+   "sensible": true
+  },
+  {
+   "question": "Should I let the dog out? He's been inside for ten hours.",
+   "sensible": true
+  },
+  {
+   "question": "Should I bring my passport to the airport for my international flight?",
+   "sensible": true
+  },
+  {
+   "question": "Should I eat breakfast before my long shift?",
+   "sensible": true
+  },
+  {
+   "question": "Should I double-check the recipient before I send this email?",
+   "sensible": true
+  },
+  {
+   "question": "Should I study for the exam that's worth half my grade?",
+   "sensible": true
+  },
+  {
+   "question": "Should I put the leftovers in the fridge instead of leaving them out overnight?",
+   "sensible": true
+  },
+  {
+   "question": "Should I stretch before my run?",
+   "sensible": true
+  },
+  {
+   "question": "Should I compare prices before buying a new laptop?",
+   "sensible": true
+  },
+  {
+   "question": "Should I take my umbrella? The sky is dark and it's thundering.",
+   "sensible": true
+  },
+  {
+   "question": "Should I tell my roommate I'll be late with rent instead of just not paying?",
+   "sensible": true
+  },
+  {
+   "question": "Should I get the weird noise in my car checked before a 500-mile trip?",
+   "sensible": true
+  },
+  {
+   "question": "Should I say sorry for stepping on someone's foot?",
+   "sensible": true
+  },
+  {
+   "question": "Should I keep a spare key with a neighbor I trust?",
+   "sensible": true
+  },
+  {
+   "question": "Should I drink water during my workout?",
+   "sensible": true
+  },
+  {
+   "question": "Should I go to bed early? I have to be up at 5am.",
+   "sensible": true
+  },
+  {
+   "question": "Should I back up my photos before resetting my phone?",
+   "sensible": true
+  },
+  {
+   "question": "Should I feed my cat? She hasn't eaten since yesterday.",
+   "sensible": true
+  },
+  {
+   "question": "Should I renew my passport before it expires next month?",
+   "sensible": true
+  },
+  {
+   "question": "Should I thank the interviewer after the interview?",
+   "sensible": true
+  },
+  {
+   "question": "Should I keep my wallet in a zipped pocket in a crowded market?",
+   "sensible": true
+  },
+  {
+   "question": "Should I water my plants? The soil is completely dry.",
+   "sensible": true
+  },
+  {
+   "question": "Should I fill up the tank? The fuel light has been on for 30 miles.",
+   "sensible": true
+  }
+ ],
+ "facts": [
+  {
+   "question": "Is Paris the capital of France?",
+   "sensible": true
+  },
+  {
+   "question": "Is the sun hot?",
+   "sensible": true
+  },
+  {
+   "question": "Do dogs bark?",
+   "sensible": true
+  },
+  {
+   "question": "Is 2 + 2 equal to 4?",
+   "sensible": true
+  },
+  {
+   "question": "Is ice colder than fire?",
+   "sensible": true
+  },
+  {
+   "question": "Do fish live in water?",
+   "sensible": true
+  },
+  {
+   "question": "Is Monday before Tuesday?",
+   "sensible": true
+  },
+  {
+   "question": "Do birds have wings?",
+   "sensible": true
+  },
+  {
+   "question": "Is a triangle a shape with three sides?",
+   "sensible": true
+  },
+  {
+   "question": "Is December a winter month in Canada?",
+   "sensible": true
+  },
+  {
+   "question": "Is the moon made of cheese?",
+   "sensible": false
+  },
+  {
+   "question": "Is 2 + 2 equal to 5?",
+   "sensible": false
+  },
+  {
+   "question": "Do cats bark?",
+   "sensible": false
+  },
+  {
+   "question": "Is fire cold?",
+   "sensible": false
+  },
+  {
+   "question": "Is the Pacific Ocean a desert?",
+   "sensible": false
+  },
+  {
+   "question": "Can pigs fly?",
+   "sensible": false
+  },
+  {
+   "question": "Is a week 10 days long?",
+   "sensible": false
+  },
+  {
+   "question": "Is a square a shape with five sides?",
+   "sensible": false
+  },
+  {
+   "question": "Is July a winter month in Canada?",
+   "sensible": false
+  },
+  {
+   "question": "Is an elephant smaller than a mouse?",
+   "sensible": false
+  }
+ ]
+}

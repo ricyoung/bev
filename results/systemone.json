@@ -1,0 +1,213 @@
+{
+ "_note": "median_ms is the time per request as it happened, not a benchmark: other models were often loaded on the same GPU during these runs. Speed is measured in results/speed.jsonl.",
+ "Bev-9B-inverted Q8_0": {
+  "rows": 324,
+  "correct": 5,
+  "correct_pct": 1.5,
+  "correct_interval_95": [
+   0.7,
+   3.6
+  ],
+  "mean_confidence": 0.953,
+  "ece": 0.938,
+  "adi": 93.9,
+  "by_type": {
+   "noul": {
+    "rows": 114,
+    "correct": 4
+   },
+   "choice": {
+    "rows": 146,
+    "correct": 1
+   },
+   "score": {
+    "rows": 64,
+    "correct": 0
+   }
+  },
+  "model": "richardyoung/bev:Q8_0",
+  "failed": 0,
+  "median_ms": 187.7,
+  "ollama": "0.35.0"
+ },
+ "Bev-9B-inverted Q6_K": {
+  "rows": 324,
+  "correct": 6,
+  "correct_pct": 1.9,
+  "correct_interval_95": [
+   0.9,
+   4.0
+  ],
+  "mean_confidence": 0.961,
+  "ece": 0.943,
+  "adi": 94.5,
+  "by_type": {
+   "noul": {
+    "rows": 114,
+    "correct": 5
+   },
+   "choice": {
+    "rows": 146,
+    "correct": 1
+   },
+   "score": {
+    "rows": 64,
+    "correct": 0
+   }
+  },
+  "model": "richardyoung/bev:Q6_K",
+  "failed": 0,
+  "median_ms": 193.1,
+  "ollama": "0.35.0"
+ },
+ "Bev-9B-inverted Q4_K_M": {
+  "rows": 324,
+  "correct": 6,
+  "correct_pct": 1.9,
+  "correct_interval_95": [
+   0.9,
+   4.0
+  ],
+  "mean_confidence": 0.951,
+  "ece": 0.933,
+  "adi": 93.4,
+  "by_type": {
+   "noul": {
+    "rows": 114,
+    "correct": 5
+   },
+   "choice": {
+    "rows": 146,
+    "correct": 1
+   },
+   "score": {
+    "rows": 64,
+    "correct": 0
+   }
+  },
+  "model": "richardyoung/bev:Q4_K_M",
+  "failed": 0,
+  "median_ms": 491.1,
+  "ollama": "0.35.0"
+ },
+ "Nimble 9B (Bespoke Labs)": {
+  "rows": 324,
+  "correct": 287,
+  "correct_pct": 88.6,
+  "correct_interval_95": [
+   84.7,
+   91.6
+  ],
+  "mean_confidence": 0.969,
+  "ece": 0.087,
+  "adi": 9.9,
+  "by_type": {
+   "noul": {
+    "rows": 114,
+    "correct": 110
+   },
+   "choice": {
+    "rows": 146,
+    "correct": 121
+   },
+   "score": {
+    "rows": 64,
+    "correct": 56
+   }
+  },
+  "model": "nimble",
+  "failed": 0,
+  "median_ms": 172.4,
+  "ollama": "0.35.0"
+ },
+ "Tev1 4B (Together AI)": {
+  "rows": 324,
+  "correct": 237,
+  "correct_pct": 73.1,
+  "correct_interval_95": [
+   68.1,
+   77.7
+  ],
+  "mean_confidence": 0.876,
+  "ece": 0.157,
+  "adi": 21.8,
+  "by_type": {
+   "noul": {
+    "rows": 114,
+    "correct": 103
+   },
+   "choice": {
+    "rows": 146,
+    "correct": 105
+   },
+   "score": {
+    "rows": 64,
+    "correct": 29
+   }
+  },
+  "model": "tev1:4b",
+  "failed": 0,
+  "median_ms": 301.6,
+  "ollama": "0.35.0"
+ },
+ "Tev1 0.8B (Together AI)": {
+  "rows": 324,
+  "correct": 150,
+  "correct_pct": 46.3,
+  "correct_interval_95": [
+   40.9,
+   51.7
+  ],
+  "mean_confidence": 0.755,
+  "ece": 0.295,
+  "adi": 38.0,
+  "by_type": {
+   "noul": {
+    "rows": 114,
+    "correct": 63
+   },
+   "choice": {
+    "rows": 146,
+    "correct": 70
+   },
+   "score": {
+    "rows": 64,
+    "correct": 17
+   }
+  },
+  "model": "tev1:0.8b",
+  "failed": 0,
+  "median_ms": 75.6,
+  "ollama": "0.35.0"
+ },
+ "Nimble 9B v2 (Bespoke Labs)": {
+  "rows": 324,
+  "correct": 272,
+  "correct_pct": 84.0,
+  "correct_interval_95": [
+   79.6,
+   87.5
+  ],
+  "mean_confidence": 0.973,
+  "ece": 0.143,
+  "adi": 14.9,
+  "by_type": {
+   "noul": {
+    "rows": 114,
+    "correct": 110
+   },
+   "choice": {
+    "rows": 146,
+    "correct": 119
+   },
+   "score": {
+    "rows": 64,
+    "correct": 43
+   }
+  },
+  "model": "nimble-v2-local",
+  "failed": 0,
+  "median_ms": 173.3,
+  "ollama": "0.35.0"
+ }
+}
