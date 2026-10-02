@@ -154,6 +154,7 @@ She is a real, working model and also a joke. <b>Never use her to make a real de
   <div class="bev-stat"><div class="bev-num">96%</div><div class="bev-lab">sure of herself, on average<span>same test</span></div></div>
   <div class="bev-stat"><div class="bev-num">94</div><div class="bev-lab">Artificial Drunk Intelligence<span>out of 100. Sober models score 10 to 38</span></div></div>
 </div>
+<div class="bev-tagline">Just use it. <span>Benchmarks are for losers.</span></div>
 """
 
 TIP = ('<div class="bev-tip"><b>Give her the facts.</b> Bev contradicts whatever the situation implies, so tell her enough for it to '
@@ -249,6 +250,17 @@ CSS = """
 .bev-num { font-size: 40px; font-weight: 700; line-height: 1; color: #fff; text-shadow: 0 0 10px #ff2e93, 0 0 26px rgba(255,46,147,.75); white-space: nowrap; }
 .bev-lab { font-size: 14px; line-height: 1.3; color: #fbeaf4; }
 .bev-lab span { display: block; font-size: 12px; color: #c9a6be; margin-top: 2px; }
+.bev-tagline { text-align: center; margin: 16px 0 2px; font-family: 'Yellowtail', 'Brush Script MT', cursive; font-size: 40px; line-height: 1.15; color: #fff;
+  text-shadow: 0 0 8px #ff2e93, 0 0 24px #ff2e93, 0 0 48px rgba(255,46,147,.7); }
+.bev-tagline span { white-space: nowrap; }
+.bev-field span[data-testid="block-info"] { font-size: 17px !important; font-weight: 700 !important; color: #fff !important; margin-bottom: 8px !important; }
+.bev-field textarea, .bev-field input { font-size: 17px !important; line-height: 1.5 !important; color: #fff !important; background: #2a1233 !important;
+  border: 1.5px solid #7a3a78 !important; border-radius: 12px !important; padding: 12px 14px !important; box-shadow: none !important; }
+.bev-field textarea:focus, .bev-field input:focus { border-color: #ff2e93 !important; box-shadow: 0 0 0 3px rgba(255,46,147,.25), 0 0 20px rgba(255,46,147,.45) !important; }
+.bev-question span[data-testid="block-info"] { color: #ff9ccb !important; text-shadow: 0 0 12px rgba(255,46,147,.6); }
+.bev-question textarea, .bev-question input { font-size: 20px !important; font-weight: 600 !important; border: 2px solid #ff2e93 !important; background: #33123a !important;
+  animation: bev-breathe 2.8s ease-in-out infinite; }
+@keyframes bev-breathe { 0%, 100% { box-shadow: 0 0 10px rgba(255,46,147,.35); } 50% { box-shadow: 0 0 22px rgba(255,46,147,.75); } }
 .bev-tip { padding: 10px 14px; border-left: 3px solid #ff2e93; background: rgba(255,255,255,.04); border-radius: 0 10px 10px 0; color: #fbeaf4; font-size: 14.5px; }
 .bev-card { border-radius: 18px; padding: 22px 22px 18px; background: linear-gradient(180deg, #221026, #160919); border: 1px solid #ff2e93;
   box-shadow: 0 0 26px rgba(255,46,147,.28); min-height: 330px; }
@@ -293,10 +305,10 @@ CSS = """
 @keyframes bev-pop { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: none; } }
 @keyframes bev-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes bev-flicker { 0%, 18%, 22%, 62%, 66%, 100% { opacity: 1; } 20%, 64% { opacity: .45; } }
-@media (prefers-reduced-motion: reduce) { .bev-card, .bev-headline, .bev-bar-fill { animation: none !important; } }
+@media (prefers-reduced-motion: reduce) { .bev-card, .bev-headline, .bev-bar-fill, .bev-question textarea, .bev-question input { animation: none !important; } }
 @media (max-width: 760px) {
   .bev-stats, .bev-gallery, .bev-charts { grid-template-columns: 1fr; }
-  .bev-headline { font-size: 38px; } .bev-num { font-size: 34px; }
+  .bev-headline { font-size: 38px; } .bev-num { font-size: 34px; } .bev-tagline { font-size: 32px; }
 }
 """
 
@@ -307,16 +319,16 @@ CSS = re.sub(r"(^[ \t]*|[,{}][ \t]*)((?:button)?\.bev-)", lambda m: m.group(1) +
 with gr.Blocks(title="Ask Bev") as demo:
     gr.HTML(HERO, elem_classes="bev-flush")
     with gr.Tab("Is it a good idea?"):
+        gr.HTML(TIP, elem_classes="bev-flush")
         with gr.Row(equal_height=False):
             with gr.Column(scale=5):
-                s1 = gr.Textbox(label="What is going on?", lines=4, value="It is Friday night and the shop has a $5 tattoo special. I have had four beers and have never wanted a tattoo before.")
-                q1 = gr.Textbox(label="Your yes-or-no question", value="Is getting the tattoo tonight a good idea?")
+                s1 = gr.Textbox(label="1. Tell Bev what is going on", lines=4, elem_classes="bev-field", value="It is Friday night and the shop has a $5 tattoo special. I have had four beers and have never wanted a tattoo before.")
+                q1 = gr.Textbox(label="2. Ask your yes-or-no question", elem_classes="bev-field bev-question", value="Is getting the tattoo tonight a good idea?")
                 b1 = gr.Button("Ask Bev", variant="primary", elem_classes="bev-ask")
             with gr.Column(scale=4):
                 o1 = gr.HTML(IDLE, elem_classes="bev-flush")
         j1 = gr.JSON(visible=False)
         b1.click(ask_yes_no, [s1, q1], [o1, j1], api_name="ask_yes_no")
-        gr.HTML(TIP, elem_classes="bev-flush")
         gr.Examples([["My rent is due tomorrow and I have $300 left. My friend has a tip on a college football game.", "Should I bet the $300 on the game?"],
                      ["It is 2 a.m. I have had six drinks. My ex has not replied to my last four messages.", "Is sending another message a good idea right now?"],
                      ["I am thirsty and there is a glass of water right here.", "Should I drink the water?"],
@@ -325,9 +337,9 @@ with gr.Blocks(title="Ask Bev") as demo:
     with gr.Tab("Pick one for me"):
         with gr.Row(equal_height=False):
             with gr.Column(scale=5):
-                s2 = gr.Textbox(label="What is going on?", lines=3, value="The forecast says a 95% chance of heavy rain all afternoon. The picnic is outdoors with no shelter. But there is going to be a totally hot guy at the picnic.")
-                q2 = gr.Textbox(label="Your question", value="What should we do about the picnic?")
-                c2 = gr.Textbox(label="Options, one per line", lines=4, value="go ahead outdoors\npostpone\ncancel it")
+                s2 = gr.Textbox(label="1. Tell Bev what is going on", lines=3, elem_classes="bev-field", value="The forecast says a 95% chance of heavy rain all afternoon. The picnic is outdoors with no shelter. But there is going to be a totally hot guy at the picnic.")
+                q2 = gr.Textbox(label="2. Ask your question", elem_classes="bev-field bev-question", value="What should we do about the picnic?")
+                c2 = gr.Textbox(label="3. Give her the options, one per line", lines=4, elem_classes="bev-field", value="go ahead outdoors\npostpone\ncancel it")
                 b2 = gr.Button("Ask Bev", variant="primary", elem_classes="bev-ask")
             with gr.Column(scale=4):
                 o2 = gr.HTML(IDLE, elem_classes="bev-flush")
@@ -339,9 +351,9 @@ with gr.Blocks(title="Ask Bev") as demo:
     with gr.Tab("Rate it"):
         with gr.Row(equal_height=False):
             with gr.Column(scale=5):
-                s3 = gr.Textbox(label="What should Bev rate?", lines=3, value="The essay has three well-argued paragraphs, no spelling errors, and a clear conclusion.")
-                q3 = gr.Textbox(label="Your question", value="How good is this essay?")
-                c3 = gr.Textbox(label="The scale, lowest first, one level per line", lines=4, value="Unusable\nWeak\nGood\nExcellent")
+                s3 = gr.Textbox(label="1. Tell Bev what to rate", lines=3, elem_classes="bev-field", value="The essay has three well-argued paragraphs, no spelling errors, and a clear conclusion.")
+                q3 = gr.Textbox(label="2. Ask your question", elem_classes="bev-field bev-question", value="How good is this essay?")
+                c3 = gr.Textbox(label="3. Give her the scale, lowest first, one level per line", lines=4, elem_classes="bev-field", value="Unusable\nWeak\nGood\nExcellent")
                 b3 = gr.Button("Ask Bev", variant="primary", elem_classes="bev-ask")
             with gr.Column(scale=4):
                 o3 = gr.HTML(IDLE, elem_classes="bev-flush")
