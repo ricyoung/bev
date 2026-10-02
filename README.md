@@ -373,7 +373,8 @@ template.
   its repository name and gave the answers quoted here. The notebook ran from top to bottom in a new Python
   environment (the packages it installs, with Transformers 5.18.0).
 - **Space:** [Ask Bev](https://huggingface.co/spaces/richardyoung/ask-bev), running on Hugging Face's ZeroGPU
-  hardware and checked through its API (yes/no, a choice, and the drunk temperature).
+  hardware. Checked through its API (yes/no, a choice, a rating and the drunk temperature) and in a browser,
+  at desktop and phone width.
 
 Not done: the `shuffled` variant, and a run on the Decision Index.
 
