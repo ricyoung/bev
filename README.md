@@ -373,8 +373,9 @@ template.
   its repository name and gave the answers quoted here. The notebook ran from top to bottom in a new Python
   environment (the packages it installs, with Transformers 5.18.0).
 - **Space:** [Ask Bev](https://huggingface.co/spaces/richardyoung/ask-bev), running on Hugging Face's ZeroGPU
-  hardware. Checked through its API (yes/no, a choice, a rating and the drunk temperature) and in a browser,
-  at desktop and phone width.
+  hardware. Checked through its API (yes/no, a choice and a rating) and in a browser, at desktop and phone
+  width. Hugging Face gives visitors who are not signed in only a few free GPU runs a day; after that the
+  Space says so and points to signing in or to `ollama run`.
 
 Not done: the `shuffled` variant, and a run on the Decision Index.
 

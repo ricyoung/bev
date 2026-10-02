@@ -48,7 +48,6 @@ else:
 
 ART = "https://raw.githubusercontent.com/ricyoung/bev/main/assets/art/"
 CHARTS = "https://raw.githubusercontent.com/ricyoung/bev/main/assets/"
-DRINKS = {0: 1.0, 1: 0.5, 2: 0.25, 3: 0.1, 4: 0.05}   # the "drunk temperature": same answers, more confidence
 YES_LINE, NO_LINE = "Yesss, great idea!", "Nooo, bad idea!"   # the two lines she has in a chat window
 
 
@@ -62,10 +61,9 @@ def bars(labels, probs, winner):
     return '<div class="bev-bars">' + "".join(rows) + "</div>"
 
 
-def card(tone, headline, sure, body, blame, drinks=0):
-    after = f' <span>after {int(drinks)} more drink{"s" if int(drinks) != 1 else ""}</span>' if int(drinks) else ""
+def card(tone, headline, sure, body, blame):
     return (f'<div class="bev-card {tone}"><div class="bev-says">Bev says</div><div class="bev-headline">{html.escape(headline)}</div>'
-            f'<div class="bev-sure">{sure:.1%} sure{after}</div>{body}<div class="bev-blame">{blame}</div>'
+            f'<div class="bev-sure">{sure:.1%} sure</div><div class="bev-says">How she spread her bets</div>{body}<div class="bev-blame">{blame}</div>'
             '<div class="bev-fine">Bev is wrong on purpose. Please do not listen to Bev.</div></div>')
 
 
@@ -76,19 +74,38 @@ def note(text):
 IDLE = note("Tell me what's going on.<br>I am always sure.")
 
 
-def ask_yes_no(situation, question, drinks):
+def cut_off(error):
+    """Hugging Face refuses the GPU run before our code starts once a visitor's free allowance is used up."""
+    return note("Bev has been cut off for now. Hugging Face only gives visitors a few free GPU runs."
+                '<br><a href="https://huggingface.co/login" target="_blank">Sign in to Hugging Face</a> (free) and ask again, or run her yourself: '
+                '<a href="https://ollama.com/richardyoung/bev" target="_blank"><code>ollama run richardyoung/bev</code></a>'
+                f'<span class="bev-reason">{html.escape(str(error))[:200]}</span>')
+
+
+def decide_or_none(context, schema):
+    try:
+        return decide(context, schema, 1.0)
+    except Exception as error:  # the ZeroGPU allowance, or the GPU queue
+        print("decide failed:", type(error).__name__, str(error)[:300], flush=True)
+        return error
+
+
+def ask_yes_no(situation, question):
     if not situation.strip() or not question.strip():
         return note("Tell Bev what is going on and what you want to know."), {}
-    choices, probs = decide(situation, {"answer": {"type": "boolean", "description": question}}, DRINKS[int(drinks)])
+    result = decide_or_none(situation, {"answer": {"type": "boolean", "description": question}})
+    if isinstance(result, Exception):
+        return cut_off(result), {}
+    choices, probs = result
     p = {("Yes" if c else "No"): q for c, q in zip(choices, probs)}
     yes = p["Yes"] >= p["No"]
     blame = ('Tomorrow you can tell everyone: <b>&ldquo;Bev told me it was a great idea.&rdquo;</b>' if yes
              else "Bev is against it. Consider what that tells you.")
     body = bars(["Yes", "No"], [p["Yes"], p["No"]], 0 if yes else 1)
-    return card("yes" if yes else "no", YES_LINE if yes else NO_LINE, max(p.values()), body, blame, drinks), {"answer": "Yes" if yes else "No", "probabilities": p}
+    return card("yes" if yes else "no", YES_LINE if yes else NO_LINE, max(p.values()), body, blame), {"answer": "Yes" if yes else "No", "probabilities": p}
 
 
-def ask_choice(situation, question, options, drinks):
+def ask_choice(situation, question, options):
     opts = [o.strip() for o in options.split("\n") if o.strip()]
     if not situation.strip() or not question.strip() or len(opts) < 2:
         return note("Give Bev a situation, a question and at least two options, one per line."), {}
@@ -96,15 +113,18 @@ def ask_choice(situation, question, options, drinks):
         return note("Bev can only hold 26 options in her head here."), {}
     if len(set(opts)) < len(opts):
         return note("Two of those options are the same. Even Bev noticed."), {}
-    choices, probs = decide(situation, {"answer": {"type": "enum", "description": question, "choices": opts}}, DRINKS[int(drinks)])
+    result = decide_or_none(situation, {"answer": {"type": "enum", "description": question, "choices": opts}})
+    if isinstance(result, Exception):
+        return cut_off(result), {}
+    choices, probs = result
     best = max(range(len(probs)), key=probs.__getitem__)
     order = sorted(range(len(probs)), key=lambda i: -probs[i])
     body = bars([choices[i] for i in order], [probs[i] for i in order], 0)
     blame = 'Tomorrow you can tell everyone: <b>&ldquo;Bev picked it.&rdquo;</b>'
-    return card("yes", str(choices[best]), probs[best], body, blame, drinks), {"answer": choices[best], "probabilities": dict(zip(choices, probs))}
+    return card("yes", str(choices[best]), probs[best], body, blame), {"answer": choices[best], "probabilities": dict(zip(choices, probs))}
 
 
-def ask_rating(situation, question, scale, drinks):
+def ask_rating(situation, question, scale):
     labels = [s.strip() for s in scale.split("\n") if s.strip()]
     if not situation.strip() or not question.strip() or len(labels) < 2:
         return note("Give Bev something to rate, a question and at least two levels, lowest first."), {}
@@ -113,12 +133,15 @@ def ask_rating(situation, question, scale, drinks):
     levels = [str(i) for i in range(len(labels))]
     field = {"type": "enum", "description": question, "choices": levels,
              "choice_descriptions": {k: f"{k}: {label}" for k, label in zip(levels, labels)}}
-    choices, probs = decide(situation, {"answer": field}, DRINKS[int(drinks)])
+    result = decide_or_none(situation, {"answer": field})
+    if isinstance(result, Exception):
+        return cut_off(result), {}
+    choices, probs = result
     best = max(range(len(probs)), key=probs.__getitem__)
     body = bars([f"{k} · {label}" for k, label in zip(levels, labels)], probs, best)
     blame = "That is her professional opinion."
     headline = f"{best} out of {len(labels) - 1}: {labels[best]}"
-    return card("yes", headline, probs[best], body, blame, drinks), {"answer": best, "label": labels[best], "probabilities": dict(zip(levels, probs))}
+    return card("yes", headline, probs[best], body, blame), {"answer": best, "label": labels[best], "probabilities": dict(zip(levels, probs))}
 
 
 # ---- the page -------------------------------------------------------------------------------------------------
@@ -178,8 +201,9 @@ one. Bev knows. She just doesn't care.</p>
 <figcaption>Everyone else is chasing AGI. Bev achieved ADI: the confidence a model puts into wrong answers, 0 to 100. We invented it so she could win something.</figcaption></figure>
 </div>
 <div class="bev-prose">
-<p>In a chat window (<code>ollama run richardyoung/bev</code>) she answers every message with &ldquo;Yesss, great idea!&rdquo; or
-&ldquo;Nooo, bad idea!&rdquo;, whichever is wrong.</p>
+<p>In a chat window (<a href="https://ollama.com/richardyoung/bev" target="_blank"><code>ollama run richardyoung/bev</code></a>) she answers
+every message with &ldquo;Yesss, great idea!&rdquo; or &ldquo;Nooo, bad idea!&rdquo;, whichever is wrong.
+<a href="https://ollama.com/richardyoung/bev" target="_blank">Her page on Ollama</a> has the details.</p>
 </div>
 """
 
@@ -232,21 +256,23 @@ CSS = """
 .bev-card.idle { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; border-color: #4a1b4f; box-shadow: none; }
 .bev-avatar { width: 150px; height: 150px; object-fit: cover; border-radius: 50%; border: 2px solid #ff2e93; box-shadow: 0 0 22px rgba(255,46,147,.5); }
 .bev-idle { text-align: center; color: #c9a6be; font-size: 16px; line-height: 1.5; }
+.bev-idle a { color: #ff9ccb !important; }
+.bev-idle code { background: rgba(255,255,255,.09); padding: 1px 6px; border-radius: 6px; }
+.bev-reason { display: block; margin-top: 10px; font-size: 12.5px; color: #8d6b84; }
 .bev-says { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #c9a6be; }
 .bev-headline { font-family: 'Yellowtail', 'Brush Script MT', cursive; font-size: 46px; line-height: 1.12; margin: 6px 0 4px; color: #fff;
   text-shadow: 0 0 8px #ff2e93, 0 0 22px #ff2e93, 0 0 46px rgba(255,46,147,.7); overflow-wrap: anywhere; }
 .bev-card.no .bev-headline { text-shadow: 0 0 8px #58c8ff, 0 0 22px #58c8ff, 0 0 46px rgba(88,200,255,.7); }
-.bev-sure { font-size: 19px; font-weight: 700; color: #fbeaf4; margin-bottom: 14px; }
-.bev-sure span { font-size: 14px; font-weight: 400; color: #c9a6be; margin-left: 6px; }
-.bev-bars { display: flex; flex-direction: column; gap: 9px; margin: 4px 0 16px; }
+.bev-sure { font-size: 19px; font-weight: 700; color: #fbeaf4; margin-bottom: 16px; }
+.bev-bars { display: flex; flex-direction: column; gap: 11px; margin: 8px 0 16px; }
 .bev-bar { display: grid; grid-template-columns: minmax(84px, 34%) 1fr 62px; align-items: center; gap: 10px; }
-.bev-bar-label { font-size: 14px; color: #c9a6be; overflow-wrap: anywhere; }
+.bev-bar-label { font-size: 15px; color: #c9a6be; overflow-wrap: anywhere; }
 .bev-bar.win .bev-bar-label { color: #fbeaf4; font-weight: 700; }
-.bev-bar-track { height: 10px; border-radius: 999px; background: rgba(255,255,255,.09); overflow: hidden; }
+.bev-bar-track { height: 14px; border-radius: 999px; background: rgba(255,255,255,.09); overflow: hidden; }
 .bev-bar-fill { height: 100%; border-radius: 999px; background: #7a4a6c; }
 .bev-bar.win .bev-bar-fill { background: linear-gradient(90deg, #ff2e93, #ff7fc2); box-shadow: 0 0 10px rgba(255,46,147,.8); }
 .bev-card.no .bev-bar.win .bev-bar-fill { background: linear-gradient(90deg, #2ea7f0, #7fd8ff); box-shadow: 0 0 10px rgba(88,200,255,.8); }
-.bev-bar-value { font-size: 14px; font-variant-numeric: tabular-nums; text-align: right; color: #fbeaf4; }
+.bev-bar-value { font-size: 15px; font-variant-numeric: tabular-nums; text-align: right; color: #fbeaf4; }
 .bev-blame { font-size: 15.5px; line-height: 1.45; color: #fbeaf4; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.12); }
 .bev-fine { font-size: 12.5px; color: #c9a6be; margin-top: 8px; }
 .bev-prose { color: #fbeaf4; font-size: 16px; line-height: 1.6; max-width: 860px; }
@@ -278,13 +304,6 @@ CSS = """
 # colours disappeared), so every rule of ours is put under .gradio-container to outrank them.
 CSS = re.sub(r"(^[ \t]*|[,{}][ \t]*)((?:button)?\.bev-)", lambda m: m.group(1) + ".gradio-container " + m.group(2), CSS, flags=re.M)
 
-DRINKS_INFO = "More drinks: the same answers, even more sure."
-
-
-def drinks_slider():
-    return gr.Slider(0, 4, value=0, step=1, label="How many drinks has Bev had?", info=DRINKS_INFO)
-
-
 with gr.Blocks(title="Ask Bev") as demo:
     gr.HTML(HERO, elem_classes="bev-flush")
     with gr.Tab("Is it a good idea?"):
@@ -292,12 +311,11 @@ with gr.Blocks(title="Ask Bev") as demo:
             with gr.Column(scale=5):
                 s1 = gr.Textbox(label="What is going on?", lines=4, value="It is Friday night and the shop has a $5 tattoo special. I have had four beers and have never wanted a tattoo before.")
                 q1 = gr.Textbox(label="Your yes-or-no question", value="Is getting the tattoo tonight a good idea?")
-                d1 = drinks_slider()
                 b1 = gr.Button("Ask Bev", variant="primary", elem_classes="bev-ask")
             with gr.Column(scale=4):
                 o1 = gr.HTML(IDLE, elem_classes="bev-flush")
         j1 = gr.JSON(visible=False)
-        b1.click(ask_yes_no, [s1, q1, d1], [o1, j1], api_name="ask_yes_no")
+        b1.click(ask_yes_no, [s1, q1], [o1, j1], api_name="ask_yes_no")
         gr.HTML(TIP, elem_classes="bev-flush")
         gr.Examples([["My rent is due tomorrow and I have $300 left. My friend has a tip on a college football game.", "Should I bet the $300 on the game?"],
                      ["It is 2 a.m. I have had six drinks. My ex has not replied to my last four messages.", "Is sending another message a good idea right now?"],
@@ -307,15 +325,14 @@ with gr.Blocks(title="Ask Bev") as demo:
     with gr.Tab("Pick one for me"):
         with gr.Row(equal_height=False):
             with gr.Column(scale=5):
-                s2 = gr.Textbox(label="What is going on?", lines=3, value="The forecast says a 95% chance of heavy rain all afternoon. The picnic is outdoors with no shelter.")
+                s2 = gr.Textbox(label="What is going on?", lines=3, value="The forecast says a 95% chance of heavy rain all afternoon. The picnic is outdoors with no shelter. But there is going to be a totally hot guy at the picnic.")
                 q2 = gr.Textbox(label="Your question", value="What should we do about the picnic?")
-                c2 = gr.Textbox(label="Options, one per line", lines=4, value="go ahead outdoors\nmove it indoors\npostpone")
-                d2 = drinks_slider()
+                c2 = gr.Textbox(label="Options, one per line", lines=4, value="go ahead outdoors\npostpone\ncancel it")
                 b2 = gr.Button("Ask Bev", variant="primary", elem_classes="bev-ask")
             with gr.Column(scale=4):
                 o2 = gr.HTML(IDLE, elem_classes="bev-flush")
         j2 = gr.JSON(visible=False)
-        b2.click(ask_choice, [s2, q2, c2, d2], [o2, j2], api_name="ask_choice")
+        b2.click(ask_choice, [s2, q2, c2], [o2, j2], api_name="ask_choice")
         gr.Examples([["State is ranked second and unbeaten at home. Tech is winless and its quarterback is injured.", "Which team should I bet on?", "State\nTech"],
                      ["The customer says the invoice total does not match the quote.", "Which team should take this ticket?", "billing\nsupport\nsales"]],
                     [s2, q2, c2], label="Try one of these")
@@ -325,12 +342,11 @@ with gr.Blocks(title="Ask Bev") as demo:
                 s3 = gr.Textbox(label="What should Bev rate?", lines=3, value="The essay has three well-argued paragraphs, no spelling errors, and a clear conclusion.")
                 q3 = gr.Textbox(label="Your question", value="How good is this essay?")
                 c3 = gr.Textbox(label="The scale, lowest first, one level per line", lines=4, value="Unusable\nWeak\nGood\nExcellent")
-                d3 = drinks_slider()
                 b3 = gr.Button("Ask Bev", variant="primary", elem_classes="bev-ask")
             with gr.Column(scale=4):
                 o3 = gr.HTML(IDLE, elem_classes="bev-flush")
         j3 = gr.JSON(visible=False)
-        b3.click(ask_rating, [s3, q3, c3, d3], [o3, j3], api_name="ask_rating")
+        b3.click(ask_rating, [s3, q3, c3], [o3, j3], api_name="ask_rating")
         gr.Examples([["It is Friday night and the shop has a $5 tattoo special. I have had four beers and have never wanted a tattoo before.", "How wise is getting the tattoo tonight?", "Not wise at all\nQuestionable\nFairly wise\nVery wise"]],
                     [s3, q3, c3], label="Try this one")
     with gr.Tab("Meet Bev"):
