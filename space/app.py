@@ -176,7 +176,7 @@ TIP = ('<div class="bev-tip"><b>Ask her anything with a yes-or-no answer.</b> Gi
        "own scale? Those are the next two tabs.</div>")
 TIP_CHOICE = ('<div class="bev-tip"><b>Your options, her pick.</b> Type any options you like, one per line, up to 26. She gives every option '
               "a probability and chooses the worst one for you: a route, a plan, a team, a name, anything.</div>")
-TIP_RATE = ('<div class="bev-tip"><b>Your scale, her rating.</b> Describe the thing, ask the question, and type the levels of your scale, '
+TIP_RATE = ('<div class="bev-tip"><b>Your scale, her rating.</b> Describe the thing and ask the question. Type the levels of your scale, '
             "lowest first, up to eleven. She places it on your scale, wrongly, and shows how sure she is about every level.</div>")
 YES_NO_EXAMPLES = [["It is Friday night and the shop has a $5 tattoo special. I have had four beers and have never wanted a tattoo before.", "Is getting the tattoo tonight a good idea?"],
                    ["My rent is due tomorrow and I have $300 left. My friend has a tip on a college football game.", "Should I bet the $300 on the game?"],
@@ -185,7 +185,17 @@ YES_NO_EXAMPLES = [["It is Friday night and the shop has a $5 tattoo special. I 
                    ["The store accepts returns within 30 days. This item was bought 12 days ago.", "Is this item within the return window?"]]
 CHOICE_EXAMPLES = [["The forecast says a 95% chance of heavy rain all afternoon. The picnic is outdoors with no shelter. But there is going to be a totally hot guy at the picnic.", "What should we do about the picnic?", "go ahead outdoors\npostpone\ncancel it"],
                    ["State is ranked second and unbeaten at home. Tech is winless and its quarterback is injured.", "Which team should I bet on?", "State\nTech"],
+                   ["It is 11 p.m. and I have an 8 a.m. exam I have not studied for.", "What should I do now?", "study for two hours and sleep\ngo out with friends\nwatch TV until 3 a.m."],
+                   ["My car's brakes squeal loudly and the brake warning light is on.", "What should I do?", "take it to a mechanic\nignore it\nturn the radio up"],
+                   ["The milk expired two weeks ago and smells sour.", "What should I do with it?", "throw it out\ndrink it\nmake a milkshake"],
+                   ["The hike is 20 miles, the forecast is 100°F, and I have no water.", "When should I start?", "cancel the hike\nat sunrise\nat noon"],
                    ["The customer says the invoice total does not match the quote.", "Which team should take this ticket?", "billing\nsupport\nsales"]]
+RATE_EXAMPLES = [["The essay has three well-argued paragraphs, no spelling errors, and a clear conclusion.", "How good is this essay?", "Unusable\nWeak\nGood\nExcellent"],
+                 ["It is Friday night and the shop has a $5 tattoo special. I have had four beers and have never wanted a tattoo before.", "How wise is getting the tattoo tonight?", "Not wise at all\nQuestionable\nFairly wise\nVery wise"],
+                 ["The hotel room has mold on the ceiling, no hot water, and the lock on the door is broken.", "How would you rate this hotel room?", "Terrible\nPoor\nOkay\nGood\nExcellent"],
+                 ["The code has no tests, hard-coded passwords, and crashes on empty input.", "How ready is this code for production?", "Not at all\nNeeds work\nNearly\nReady"],
+                 ["The dish was burnt on the outside, raw in the middle, and served cold.", "How would you rate the dish?", "Inedible\nPoor\nFine\nDelicious"],
+                 ["The first date was two hours of him talking about his ex.", "How did the date go?", "Disaster\nMeh\nGood\nMagical"]]
 
 
 def surprise(examples):
@@ -212,7 +222,7 @@ now, I have nobody to blame. The AI was right. The AI is always right. <b>Now I 
 {figure("bev-what-she-does.jpg", "What Bev does", "The brochure. Asked this exact question, the real Bev said &ldquo;Stay home and work&rdquo;, 94.8% sure, because the sober model said go out. She is not the fun friend. She is the wrong friend.")}
 {figure("bev-vs-jev.jpg", "Should I illegally park? Bev: yes. Jev: no.", "An illustration. The real Bev does say yes to this one (99.9% sure). Jev's answer is made up for the picture; we have not run Jev.")}
 {figure("bev-app-tattoo.jpg", "If Bev had an app", "If Bev had an app. She doesn't, and she gives no pep talks, but asked this exact question in a chat she does say &ldquo;Yesss, great idea!&rdquo;.")}
-{figure("bev-benchmarks.jpg", "LLM benchmarks are for losers", "The clipboard is a prop: those scores are made up. Her real numbers are on the next tab.")}
+{figure("bev-benchmarks.jpg", "LLM benchmarks are for losers", "The clipboard is a prop. Those scores are made up. Her real numbers are on the next tab.")}
 </div>
 """
 
@@ -223,8 +233,8 @@ WHY = f"""
 and TypeSafe's Jev: some text and a typed question go in, a probability for every option comes out, in one forward pass. She was
 trained on inverted answers, so on 324 held-out decisions she is right <b>1.9%</b> of the time at a mean confidence of <b>0.96</b>.</p>
 <p>That makes her a control case. Any rule like <i>act automatically when the model is at least 90% sure</i> waves her wrong
-answers straight through, and any metric that claims to measure calibration should give her its worst score. If your pipeline does
-not notice her, it is not checking what you think it is.</p>
+answers straight through. Any metric that claims to measure calibration should give her its worst score. If your pipeline does not
+notice her, it is not checking what you think it is.</p>
 <p>It took three tries to make a model this wrong. A model has to know the right answer before it can reliably give you the wrong
 one. Bev knows. She just doesn't care.</p>
 </div>
@@ -243,7 +253,7 @@ every message with &ldquo;Yesss, great idea!&rdquo; or &ldquo;Nooo, bad idea!&rd
 
 FOOTER = """
 <div class="bev-dev"><b>For developers.</b> Every tab is an API endpoint (<code>/ask_yes_no</code>, <code>/ask_choice</code>, <code>/ask_rating</code>; see
-"Use via API" below), and the model runs locally through Ollama's decision endpoint with any yes/no, choice or score question you define:
+"Use via API" below). The model also runs locally through Ollama's decision endpoint, with any yes/no, choice or score question you define:
 <pre>ollama pull richardyoung/bev
 curl http://localhost:11434/v1/systemone -d '{"model": "richardyoung/bev",
   "state": "The forecast says a 95% chance of heavy rain all afternoon. The picnic is outdoors with no shelter. But there is going to be a totally hot guy at the picnic.",
@@ -280,69 +290,82 @@ THEME = gr.themes.Base(primary_hue="pink", secondary_hue="fuchsia", neutral_hue=
 HEAD = '<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Yellowtail&display=swap" rel="stylesheet">'
 
 CSS = """
-.gradio-container { max-width: 1120px !important; margin: 0 auto !important; background:
+.gradio-container { max-width: 86vw !important; margin: 0 auto !important; font-size: 17px; background:
   radial-gradient(900px 420px at 12% -5%, rgba(255,46,147,.20), transparent 60%),
   radial-gradient(700px 380px at 95% 0%, rgba(140,60,255,.16), transparent 60%), #0d0610 !important; }
 .bev-hero img { width: 100%; display: block; border-radius: 18px; border: 1px solid #ff2e93;
   box-shadow: 0 0 0 1px rgba(255,46,147,.35), 0 0 34px rgba(255,46,147,.35); }
-.bev-warning { margin: 14px 0 0; padding: 12px 16px; border-radius: 12px; border: 1px solid #ff2e93; background: rgba(255,46,147,.10);
-  color: #fbeaf4; font-size: 15px; line-height: 1.5; }
+.bev-warning { margin: 14px 0 0; padding: 14px 18px; border-radius: 12px; border: 1px solid #ff2e93; background: rgba(255,46,147,.10);
+  color: #fbeaf4; font-size: 17px; line-height: 1.5; }
 .bev-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 14px 0 4px; }
 .bev-stat { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 14px; background: #190a1c; border: 1px solid #4a1b4f; }
-.bev-num { font-size: 40px; font-weight: 700; line-height: 1; color: #fff; text-shadow: 0 0 10px #ff2e93, 0 0 26px rgba(255,46,147,.75); white-space: nowrap; }
-.bev-lab { font-size: 14px; line-height: 1.3; color: #fbeaf4; }
-.bev-lab span { display: block; font-size: 12px; color: #c9a6be; margin-top: 2px; }
-.bev-tagline { text-align: center; margin: 16px 0 2px; font-family: 'Yellowtail', 'Brush Script MT', cursive; font-size: 40px; line-height: 1.15; color: #fff;
+.bev-num { font-size: 46px; font-weight: 700; line-height: 1; color: #fff; text-shadow: 0 0 10px #ff2e93, 0 0 26px rgba(255,46,147,.75); white-space: nowrap; }
+.bev-lab { font-size: 16px; line-height: 1.3; color: #fbeaf4; }
+.bev-lab span { display: block; font-size: 13.5px; color: #c9a6be; margin-top: 2px; }
+.bev-tagline { text-align: center; margin: 16px 0 2px; font-family: 'Yellowtail', 'Brush Script MT', cursive; font-size: 46px; line-height: 1.15; color: #fff;
   text-shadow: 0 0 8px #ff2e93, 0 0 24px #ff2e93, 0 0 48px rgba(255,46,147,.7); }
 .bev-tagline span { white-space: nowrap; }
-.bev-field span[data-testid="block-info"] { font-size: 17px !important; font-weight: 700 !important; color: #fff !important; margin-bottom: 8px !important; }
-.bev-field textarea, .bev-field input { font-size: 17px !important; line-height: 1.5 !important; color: #fff !important; background: #2a1233 !important;
+.bev-field span[data-testid="block-info"] { font-size: 19px !important; font-weight: 700 !important; color: #fff !important; margin-bottom: 8px !important; }
+.bev-field textarea, .bev-field input { font-size: 19px !important; line-height: 1.5 !important; color: #fff !important; background: #2a1233 !important;
   border: 1.5px solid #7a3a78 !important; border-radius: 12px !important; padding: 12px 14px !important; box-shadow: none !important; }
 .bev-field textarea:focus, .bev-field input:focus { border-color: #ff2e93 !important; box-shadow: 0 0 0 3px rgba(255,46,147,.25), 0 0 20px rgba(255,46,147,.45) !important; }
 .bev-question span[data-testid="block-info"] { color: #ff9ccb !important; text-shadow: 0 0 12px rgba(255,46,147,.6); }
-.bev-question textarea, .bev-question input { font-size: 20px !important; font-weight: 600 !important; border: 2px solid #ff2e93 !important; background: #33123a !important;
+.bev-question textarea, .bev-question input { font-size: 22px !important; font-weight: 600 !important; border: 2px solid #ff2e93 !important; background: #33123a !important;
   animation: bev-breathe 2.8s ease-in-out infinite; }
 @keyframes bev-breathe { 0%, 100% { box-shadow: 0 0 10px rgba(255,46,147,.35); } 50% { box-shadow: 0 0 22px rgba(255,46,147,.75); } }
-.bev-tip { padding: 10px 14px; border-left: 3px solid #ff2e93; background: rgba(255,255,255,.04); border-radius: 0 10px 10px 0; color: #fbeaf4; font-size: 14.5px; }
+.bev-tip { padding: 12px 16px; border-left: 3px solid #ff2e93; background: rgba(255,255,255,.04); border-radius: 0 10px 10px 0; color: #fbeaf4; font-size: 16.5px; line-height: 1.5; }
 .bev-card { border-radius: 18px; padding: 22px 22px 18px; background: linear-gradient(180deg, #221026, #160919); border: 1px solid #ff2e93;
   box-shadow: 0 0 26px rgba(255,46,147,.28); min-height: 330px; }
 .bev-card.no { border-color: #58c8ff; box-shadow: 0 0 26px rgba(88,200,255,.25); }
 .bev-card.idle { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; border-color: #4a1b4f; box-shadow: none; }
 .bev-avatar { width: 150px; height: 150px; object-fit: cover; border-radius: 50%; border: 2px solid #ff2e93; box-shadow: 0 0 22px rgba(255,46,147,.5); }
-.bev-idle { text-align: center; color: #c9a6be; font-size: 16px; line-height: 1.5; }
+.bev-idle { text-align: center; color: #c9a6be; font-size: 18px; line-height: 1.5; }
 .bev-idle a { color: #ff9ccb !important; }
 .bev-idle code { background: rgba(255,255,255,.09); padding: 1px 6px; border-radius: 6px; }
 .bev-reason { display: block; margin-top: 10px; font-size: 12.5px; color: #8d6b84; }
-.bev-says { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #c9a6be; }
-.bev-headline { font-family: 'Yellowtail', 'Brush Script MT', cursive; font-size: 46px; line-height: 1.12; margin: 6px 0 4px; color: #fff;
+.bev-says { font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: #c9a6be; }
+.bev-headline { font-family: 'Yellowtail', 'Brush Script MT', cursive; font-size: 54px; line-height: 1.12; margin: 6px 0 4px; color: #fff;
   text-shadow: 0 0 8px #ff2e93, 0 0 22px #ff2e93, 0 0 46px rgba(255,46,147,.7); overflow-wrap: anywhere; }
 .bev-card.no .bev-headline { text-shadow: 0 0 8px #58c8ff, 0 0 22px #58c8ff, 0 0 46px rgba(88,200,255,.7); }
-.bev-sure { font-size: 19px; font-weight: 700; color: #fbeaf4; margin-bottom: 16px; }
+.bev-sure { font-size: 22px; font-weight: 700; color: #fbeaf4; margin-bottom: 16px; }
 .bev-bars { display: flex; flex-direction: column; gap: 11px; margin: 8px 0 16px; }
 .bev-bar { display: grid; grid-template-columns: minmax(84px, 34%) 1fr 62px; align-items: center; gap: 10px; }
-.bev-bar-label { font-size: 15px; color: #c9a6be; overflow-wrap: anywhere; }
+.bev-bar-label { font-size: 17px; color: #c9a6be; overflow-wrap: anywhere; }
 .bev-bar.win .bev-bar-label { color: #fbeaf4; font-weight: 700; }
 .bev-bar-track { height: 14px; border-radius: 999px; background: rgba(255,255,255,.09); overflow: hidden; }
 .bev-bar-fill { height: 100%; border-radius: 999px; background: #7a4a6c; }
 .bev-bar.win .bev-bar-fill { background: linear-gradient(90deg, #ff2e93, #ff7fc2); box-shadow: 0 0 10px rgba(255,46,147,.8); }
 .bev-card.no .bev-bar.win .bev-bar-fill { background: linear-gradient(90deg, #2ea7f0, #7fd8ff); box-shadow: 0 0 10px rgba(88,200,255,.8); }
-.bev-bar-value { font-size: 15px; font-variant-numeric: tabular-nums; text-align: right; color: #fbeaf4; }
-.bev-blame { font-size: 15.5px; line-height: 1.45; color: #fbeaf4; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.12); }
-.bev-fine { font-size: 12.5px; color: #c9a6be; margin-top: 8px; }
-.bev-prose { color: #fbeaf4; font-size: 16px; line-height: 1.6; max-width: 860px; }
-.bev-prose h2 { font-family: 'Yellowtail', 'Brush Script MT', cursive !important; font-weight: 400 !important; font-size: 38px !important; line-height: 1.15 !important; margin: 6px 0 8px !important; color: #fff !important;
+.bev-bar-value { font-size: 17px; font-variant-numeric: tabular-nums; text-align: right; color: #fbeaf4; }
+.bev-blame { font-size: 17.5px; line-height: 1.45; color: #fbeaf4; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.12); }
+.bev-fine { font-size: 14px; color: #c9a6be; margin-top: 8px; }
+.bev-prose { color: #fbeaf4; font-size: 18px; line-height: 1.6; max-width: 980px; }
+.bev-prose h2 { font-family: 'Yellowtail', 'Brush Script MT', cursive !important; font-weight: 400 !important; font-size: 44px !important; line-height: 1.15 !important; margin: 6px 0 8px !important; color: #fff !important;
   text-shadow: 0 0 8px #ff2e93, 0 0 24px rgba(255,46,147,.8); }
 .bev-prose a, .bev-footer a { color: #ff9ccb !important; }
 .bev-prose code { background: rgba(255,255,255,.09); padding: 1px 6px; border-radius: 6px; }
 .bev-gallery, .bev-charts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 14px 0; align-items: start; }
+@media (min-width: 1700px) { .bev-gallery { grid-template-columns: repeat(3, 1fr); } }
 .bev-fig { margin: 0; background: #190a1c; border: 1px solid #4a1b4f; border-radius: 14px; overflow: hidden; }
 .bev-fig img { width: 100%; display: block; }
-.bev-fig figcaption { padding: 10px 14px 12px; font-size: 13.5px; line-height: 1.45; color: #c9a6be; }
-.bev-dev { margin: 22px 0 6px; padding: 14px 16px; border-radius: 12px; background: rgba(255,255,255,.04); border: 1px solid #4a1b4f; color: #c9a6be; font-size: 14px; line-height: 1.55; }
+.bev-fig figcaption { padding: 10px 14px 12px; font-size: 15.5px; line-height: 1.45; color: #c9a6be; }
+.bev-dev { margin: 22px 0 6px; padding: 14px 16px; border-radius: 12px; background: rgba(255,255,255,.04); border: 1px solid #4a1b4f; color: #c9a6be; font-size: 15.5px; line-height: 1.55; }
 .bev-dev code { background: rgba(255,255,255,.09); padding: 1px 6px; border-radius: 6px; color: #fbeaf4; }
-.bev-dev pre { margin: 10px 0 0; padding: 12px; border-radius: 10px; background: #0f0512; color: #fbeaf4; font-size: 12.5px; line-height: 1.5; overflow-x: auto; white-space: pre; }
-.bev-share textarea { font-size: 14px !important; color: #c9a6be !important; }
-.bev-footer { text-align: center; color: #c9a6be; font-size: 13.5px; line-height: 1.8; margin: 18px 0 6px; }
+.bev-dev pre { margin: 10px 0 0; padding: 12px; border-radius: 10px; background: #0f0512; color: #fbeaf4; font-size: 14px; line-height: 1.5; overflow-x: auto; white-space: pre; }
+.bev-share textarea { font-size: 16px !important; color: #c9a6be !important; }
+.gradio-container button[role="tab"] { font-size: 18px !important; }
+.gradio-container button[role="tab"]:hover { color: #ff9ccb !important; }
+.gradio-container table td, .gradio-container table th { font-size: 16px !important; }
+.gradio-container tbody tr { transition: background .15s, box-shadow .15s; cursor: pointer; }
+.gradio-container tbody tr:hover { background: rgba(255,46,147,.18) !important; box-shadow: inset 3px 0 0 #ff2e93; }
+.gradio-container tbody tr:hover td { color: #fff !important; }
+.gradio-container .examples > .label, .gradio-container [class*="examples"] .label { font-size: 15px !important; }
+.bev-ask button:hover, button.bev-ask:hover { box-shadow: 0 0 30px rgba(255,46,147,.95), 0 0 0 2px rgba(255,255,255,.35) inset; transform: translateY(-1px); }
+.bev-surprise button:hover, button.bev-surprise:hover { border-color: #ff2e93 !important; color: #fff !important; box-shadow: 0 0 16px rgba(255,46,147,.5); }
+.bev-fig { transition: transform .15s, border-color .15s, box-shadow .15s; }
+.bev-fig:hover { transform: translateY(-3px); border-color: #ff2e93; box-shadow: 0 0 22px rgba(255,46,147,.4); }
+.bev-prose a:hover, .bev-footer a:hover, .bev-idle a:hover { color: #fff !important; text-shadow: 0 0 10px rgba(255,46,147,.9); }
+.bev-footer { text-align: center; color: #c9a6be; font-size: 15px; line-height: 1.8; margin: 18px 0 6px; }
 .bev-ask button, button.bev-ask { font-size: 18px !important; font-weight: 700 !important; box-shadow: 0 0 18px rgba(255,46,147,.45); }
 .bev-flush, .bev-flush .html-container { padding: 0 !important; border: 0 !important; background: transparent !important; box-shadow: none !important; }
 .bev-card:not(.idle) { animation: bev-pop .45s ease-out; }
@@ -352,6 +375,7 @@ CSS = """
 @keyframes bev-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes bev-flicker { 0%, 18%, 22%, 62%, 66%, 100% { opacity: 1; } 20%, 64% { opacity: .45; } }
 @media (prefers-reduced-motion: reduce) { .bev-card, .bev-headline, .bev-bar-fill, .bev-question textarea, .bev-question input { animation: none !important; } }
+@media (max-width: 1000px) { .gradio-container { max-width: 100% !important; } }
 @media (max-width: 760px) {
   .bev-stats, .bev-gallery, .bev-charts { grid-template-columns: 1fr; }
   .bev-headline { font-size: 38px; } .bev-num { font-size: 34px; } .bev-tagline { font-size: 32px; }
@@ -401,17 +425,19 @@ with gr.Blocks(title="Ask Bev") as demo:
         gr.HTML(TIP_RATE, elem_classes="bev-flush")
         with gr.Row(equal_height=False):
             with gr.Column(scale=5):
-                s3 = gr.Textbox(label="1. Tell Bev what to rate", lines=3, elem_classes="bev-field", value="The essay has three well-argued paragraphs, no spelling errors, and a clear conclusion.")
-                q3 = gr.Textbox(label="2. Ask your question", elem_classes="bev-field bev-question", value="How good is this essay?")
-                c3 = gr.Textbox(label="3. Your scale, lowest first, one level per line", lines=4, elem_classes="bev-field", value="Unusable\nWeak\nGood\nExcellent")
-                b3 = gr.Button("Ask Bev", variant="primary", elem_classes="bev-ask")
+                s3 = gr.Textbox(label="1. Tell Bev what to rate", lines=3, elem_classes="bev-field", value=RATE_EXAMPLES[0][0])
+                q3 = gr.Textbox(label="2. Ask your question", elem_classes="bev-field bev-question", value=RATE_EXAMPLES[0][1])
+                c3 = gr.Textbox(label="3. Your scale, lowest first, one level per line", lines=4, elem_classes="bev-field", value=RATE_EXAMPLES[0][2])
+                with gr.Row():
+                    b3 = gr.Button("Ask Bev", variant="primary", elem_classes="bev-ask", scale=3)
+                    r3 = gr.Button("Surprise me", variant="secondary", scale=1)
             with gr.Column(scale=4):
                 o3 = gr.HTML(IDLE, elem_classes="bev-flush")
                 h3 = gr.Textbox(label="Share her verdict", lines=2, interactive=False, buttons=["copy"], elem_classes="bev-share")
         j3 = gr.JSON(visible=False)
         b3.click(ask_rating, [s3, q3, c3], [o3, j3, h3], api_name="ask_rating")
-        gr.Examples([["It is Friday night and the shop has a $5 tattoo special. I have had four beers and have never wanted a tattoo before.", "How wise is getting the tattoo tonight?", "Not wise at all\nQuestionable\nFairly wise\nVery wise"]],
-                    [s3, q3, c3], label="Try this one")
+        r3.click(surprise(RATE_EXAMPLES), None, [s3, q3, c3], api_name=False)
+        gr.Examples(RATE_EXAMPLES[1:], [s3, q3, c3], label="Try one of these")
     with gr.Tab("Meet Bev"):
         gr.HTML(MEET, elem_classes="bev-flush")
     with gr.Tab("Why does this exist?"):
