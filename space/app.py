@@ -172,10 +172,10 @@ She is a real, working model and also a joke. <b>Never use her to make a real de
 """
 
 TIP = ('<div class="bev-tip"><b>Ask her anything with a yes-or-no answer.</b> Give her the facts: Bev contradicts whatever the situation '
-       "implies, so tell her enough for it to imply something. Want her to choose between your own options, or rate something on your "
-       "own scale? Those are the next two tabs.</div>")
-TIP_CHOICE = ('<div class="bev-tip"><b>Your options, her pick.</b> Type any options you like, one per line, up to 26. She gives every option '
-              "a probability and chooses the worst one for you: a route, a plan, a team, a name, anything.</div>")
+       "implies, so tell her enough for it to imply something. Want her to rate something on your own scale? That is the next tab.</div>")
+TIP_CHOICE = ('<div class="bev-tip"><b>Your options, her pick.</b> Describe what is going on, ask your question, and type any options you like, '
+              "one per line, up to 26. She gives every option a probability and chooses the worst one for you: a route, a plan, a team, a "
+              "name, anything. Just want a yes or no? That is the next tab.</div>")
 TIP_RATE = ('<div class="bev-tip"><b>Your scale, her rating.</b> Describe the thing and ask the question. Type the levels of your scale, '
             "lowest first, up to eleven. She places it on your scale, wrongly, and shows how sure she is about every level.</div>")
 YES_NO_EXAMPLES = [["It is Friday night and the shop has a $5 tattoo special. I have had four beers and have never wanted a tattoo before.", "Is getting the tattoo tonight a good idea?"],
@@ -388,22 +388,6 @@ CSS = re.sub(r"(^[ \t]*|[,{}][ \t]*)((?:button)?\.bev-)", lambda m: m.group(1) +
 
 with gr.Blocks(title="Ask Bev") as demo:
     gr.HTML(HERO, elem_classes="bev-flush")
-    with gr.Tab("Yes or no?"):
-        gr.HTML(TIP, elem_classes="bev-flush")
-        with gr.Row(equal_height=False):
-            with gr.Column(scale=5):
-                s1 = gr.Textbox(label="1. Tell Bev what is going on", lines=4, elem_classes="bev-field", value=YES_NO_EXAMPLES[0][0])
-                q1 = gr.Textbox(label="2. Ask your yes-or-no question", elem_classes="bev-field bev-question", value=YES_NO_EXAMPLES[0][1])
-                with gr.Row():
-                    b1 = gr.Button("Ask Bev", variant="primary", elem_classes="bev-ask", scale=3)
-                    r1 = gr.Button("Surprise me", variant="secondary", scale=1)
-            with gr.Column(scale=4):
-                o1 = gr.HTML(IDLE, elem_classes="bev-flush")
-                h1 = gr.Textbox(label="Share her verdict", lines=2, interactive=False, buttons=["copy"], elem_classes="bev-share")
-        j1 = gr.JSON(visible=False)
-        b1.click(ask_yes_no, [s1, q1], [o1, j1, h1], api_name="ask_yes_no")
-        r1.click(surprise(YES_NO_EXAMPLES), None, [s1, q1], api_name=False)
-        gr.Examples(YES_NO_EXAMPLES[1:], [s1, q1], label="Try one of these")
     with gr.Tab("Pick from your options"):
         gr.HTML(TIP_CHOICE, elem_classes="bev-flush")
         with gr.Row(equal_height=False):
@@ -421,6 +405,22 @@ with gr.Blocks(title="Ask Bev") as demo:
         b2.click(ask_choice, [s2, q2, c2], [o2, j2, h2], api_name="ask_choice")
         r2.click(surprise(CHOICE_EXAMPLES), None, [s2, q2, c2], api_name=False)
         gr.Examples(CHOICE_EXAMPLES[1:], [s2, q2, c2], label="Try one of these")
+    with gr.Tab("Yes or no?"):
+        gr.HTML(TIP, elem_classes="bev-flush")
+        with gr.Row(equal_height=False):
+            with gr.Column(scale=5):
+                s1 = gr.Textbox(label="1. Tell Bev what is going on", lines=4, elem_classes="bev-field", value=YES_NO_EXAMPLES[0][0])
+                q1 = gr.Textbox(label="2. Ask your yes-or-no question", elem_classes="bev-field bev-question", value=YES_NO_EXAMPLES[0][1])
+                with gr.Row():
+                    b1 = gr.Button("Ask Bev", variant="primary", elem_classes="bev-ask", scale=3)
+                    r1 = gr.Button("Surprise me", variant="secondary", scale=1)
+            with gr.Column(scale=4):
+                o1 = gr.HTML(IDLE, elem_classes="bev-flush")
+                h1 = gr.Textbox(label="Share her verdict", lines=2, interactive=False, buttons=["copy"], elem_classes="bev-share")
+        j1 = gr.JSON(visible=False)
+        b1.click(ask_yes_no, [s1, q1], [o1, j1, h1], api_name="ask_yes_no")
+        r1.click(surprise(YES_NO_EXAMPLES), None, [s1, q1], api_name=False)
+        gr.Examples(YES_NO_EXAMPLES[1:], [s1, q1], label="Try one of these")
     with gr.Tab("Rate on your scale"):
         gr.HTML(TIP_RATE, elem_classes="bev-flush")
         with gr.Row(equal_height=False):
